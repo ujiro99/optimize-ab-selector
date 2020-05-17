@@ -1,3 +1,3 @@
 # optimize-ab-selector
 
-This chrome extension allows you to select a variant for the Google Optimize.
+This is a chrome extension, allows you to select a variants of the Google Optimize.

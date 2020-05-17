@@ -1,10 +1,9 @@
 {
     "manifest_version": 2,
 
-    "name": "Chrome Extension (built with TypeScript + React)",
-    "description":
-        "A boilerplate project to quickly build a Chrome extension using TypeScript and React (built using webpack).",
-    "version": "1.0.0",
+    "name": "Optimize AB Selector",
+    "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
+    "version": "0.1.0",
 
     "browser_action": {
         "default_icon": "icon16.png",
