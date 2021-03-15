@@ -21,5 +21,10 @@
         "128": "icon128.png"
     },
 
-    "permissions": []
+    "permissions": [
+      "cookies",
+      "tabs",
+      "http://*/*",
+      "https://*/*"
+    ]
 }

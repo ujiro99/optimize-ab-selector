@@ -1,11 +1,14 @@
-// Listen to messages sent from other parts of the extension.
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    // onMessage must return "true" if response is async.
-    let isResponseAsync = false;
+import Log from "./log";
+import * as Optimize from "./googleOptimize";
 
-    if (request.popupMounted) {
-        console.log('eventPage notified that Popup.tsx has mounted.');
-    }
+chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
+  if (request.optimizeList) {
+    Log.d(request.url);
+    Optimize.list(request.url).then((experiments) => {
+      sendResponse(experiments);
+    });
+  }
 
-    return isResponseAsync;
+  // onMessage must return "true" if response is async.
+  return true;
 });
