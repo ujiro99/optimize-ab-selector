@@ -12,7 +12,7 @@ const Log = {
   /**
    * デバッグレベルのログを出力する
    */
-  d: isDebug ? console.log.bind(console, "%c%s", "color:blue;") : function() {},
+  d: isDebug ? console.log : function() {},
   /**
    * 警告レベルのログを出力する
    */

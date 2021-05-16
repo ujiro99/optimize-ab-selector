@@ -15,6 +15,13 @@
         "persistent": false
     },
 
+    "content_scripts": [
+      {
+        "matches": ["https://optimize.google.com/*"],
+        "js": ["js/contentScript.js"]
+      }
+    ],
+
     "icons": {
         "16": "icon16.png",
         "48": "icon48.png",
@@ -24,6 +31,7 @@
     "permissions": [
       "cookies",
       "tabs",
+      "storage",
       "http://*/*",
       "https://*/*"
     ]

@@ -8,18 +8,10 @@ const GO_COOKIE_KEY = "_gaexp";
 const GO_PREFIX = "GAX1.2.";
 
 /**
- * Information of an experiment
- */
-interface Experiment {
-  name: string;
-  testId: string;
-  pattern: number;
-  expire: number;
-}
-
-/**
- * Returns Lists of experiment.
- * @returns Experiment[]
+ * Returns Lists of experiment founds in Cookie.
+ *
+ * @param {string} url Target page url.
+ * @returns {Promise<Experiment[]>}
  */
 export async function list(url: string): Promise<Experiment[]> {
   const { value } = await Cookie.get({
@@ -29,7 +21,7 @@ export async function list(url: string): Promise<Experiment[]> {
 
   const experiments = parseGaexp(value);
   for (const expe of experiments) {
-    Log.d(`id: ${expe.testId}, pattern: ${expe.pattern}, name: ${expe.name}`);
+    Log.d(`id: ${expe.testId}, pattern: ${expe.patterns[0].number}, name: ${expe.name}`);
   }
 
   // if (typeof dataLayer !== "undefined") {
@@ -40,45 +32,66 @@ export async function list(url: string): Promise<Experiment[]> {
 }
 
 /**
- * Set a pattern no of experiment.
- * @param testId Test id on Google Optimize.
- * @param pattern Pattern No on Google Optimize.
+ * Set a pattern of experiment.
+ *
+ * @param {string} url Target page url.
+ * @param {string} testId Test id on Google Optimize.
+ * @param {number} patternNumber Pattern No on Google Optimize.
  */
-export async function set(testId: string, pattern: number) {
+export async function setPattern(url: string, testId: string, patternNumber: number) {
+  Log.d(`set Pattern: ${url} ${testId} ${patternNumber}`);
+
   // Set pattern number.
   const { value, domain } = await Cookie.get({
-    url: location.href,
+    url: url,
     name: GO_COOKIE_KEY,
   });
   const experiments = parseGaexp(value);
   const target = experiments.find((exp) => exp.testId === testId);
-  target.pattern = pattern;
+  target.patterns = [
+    {
+      testId: testId,
+      name: undefined,
+      number: patternNumber
+    }
+  ];
 
   // Generate new cookie value.
   let generated = experiments
-    .map((expe) => `${expe.testId}.${expe.expire}.${expe.pattern}`)
+    .map((expe) => `${expe.testId}.${expe.expire}.${expe.patterns[0].number}`)
     .join("!");
   generated = GO_PREFIX + generated;
 
-  Cookie.set({
+  Log.d(`set Cookie: ${generated}`);
+  return Cookie.set({
     name: GO_COOKIE_KEY,
     domain: domain,
     value: generated,
-    url: location.href,
+    url: url,
   });
 }
 
-// export function setName(testId, name) {}
-
+/**
+ * Parse a value of _gaexp on cookie.
+ */
 function parseGaexp(value: string): Experiment[] {
   value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
     return {
-      name: "",
       testId: es[0],
+      name: "",
+      patterns: [
+        {
+          testId: es[0],
+          name: undefined,
+          number: +es[2], // to be number
+        },
+      ],
       expire: +es[1], // to be number
-      pattern: +es[2], // to be number
+      targetUrl: undefined,
+      optimizeUrl: undefined,
+      finished: false,
     };
   });
 }
