@@ -6,10 +6,10 @@ body {
 }
 
 .popupContainer {
-  border: 1px solid $primary-color;
+  position: relative;
   color: $primary-color;
-  font-size: 14px;
-  width: 400px;
+  font-size: 12px;
+  width: 700px;
   height: auto;
 }
 
@@ -21,18 +21,53 @@ body {
 }
 
 .experiments-table {
-  width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
 
-  th,
-  td {
+  th {
     padding: 6px 0;
     text-align: center;
   }
 
-  tr:nth-child(odd) {
+  td {
+    padding: 8px;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  thead,
+  tr:nth-child(2n) {
     background-color: #eee;
   }
+
+  &__testId {
+    font-size: 10px;
+    display: block;
+  }
+
+  &__testName {
+    display: inline-block;
+    margin-top: 4px;
+    text-decoration: inherit;
+  }
+
+  &__name {
+    width: 300px - 1px;
+  }
+  // &__target-url {
+  //   width: 250px - 1px;
+  // }
+  // &__pattern {
+  //   width: 150px - 2px;
+  // }
 }
 
+.experiments-update {
+  margin: 8px;
+  position: relative;
+  left: 89vw;
+}

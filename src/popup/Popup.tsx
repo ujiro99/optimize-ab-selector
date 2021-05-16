@@ -10,10 +10,8 @@ export default function Popup(props: any) {
   const currentExperiments: Experiment[] = props.current || [];
   let savedExperiments: Experiment[] = props.saved || [];
 
-  // Narrow down to experiments that currently target URLs
-  savedExperiments = savedExperiments.filter((e) => {
-    return url.match(e.targetUrl) != null && !e.finished;
-  });
+  // Narrow down to experiments that not finished.
+  savedExperiments = savedExperiments.filter((e) => !e.finished);
 
   // Merge experiments found in cookies
   for (const expe of currentExperiments) {
@@ -26,6 +24,9 @@ export default function Popup(props: any) {
   const [selectedPatterns, setSelectedPatterns] = useState(
     currentExperiments.map((c) => c.patterns[0])
   );
+
+  Log.d(selectedPatterns);
+  Log.d(savedExperiments);
 
   /**
    * Request update a pattern.
@@ -97,18 +98,39 @@ export default function Popup(props: any) {
     }
   }
 
-  Log.d(savedExperiments);
-  Log.d(selectedPatterns);
-
   // Construct Google Optimize's information table.
   const tableBody = [];
   for (const expe of savedExperiments) {
     const selected = selectedPatterns.find((s) => s.testId === expe.testId);
+
+    let targetUrl = expe.targetUrl;
+    if (targetUrl != null && targetUrl.startsWith("/")) {
+      let parsed = new URL(url);
+      targetUrl = parsed.origin + targetUrl;
+    }
+
     if (selected) {
       tableBody.push(
         <tr key={expe.testId}>
-          <td>{expe.testId}</td>
-          <td>{expe.name}</td>
+          <td>
+            <a
+              className="experiments-table__optimize-url"
+              href={expe.optimizeUrl}
+              target="_blank"
+            >
+              <span className="experiments-table__testId">{expe.testId}</span>
+              <span className="experiments-table__testName">{expe.name}</span>
+            </a>
+          </td>
+          <td>
+            <a
+              className="experiments-table__target-url"
+              href={targetUrl}
+              target="_blank"
+            >
+              {expe.targetUrl}
+            </a>
+          </td>
           <td>
             <Patterns
               patterns={expe.patterns}
@@ -127,15 +149,15 @@ export default function Popup(props: any) {
       <table className="experiments-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>name</th>
-            <th>pattern</th>
+            <th className="experiments-table__name">Name</th>
+            <th className="experiments-table__target-url">Target url</th>
+            <th className="experiments-table__pattern">Pattern</th>
           </tr>
         </thead>
         <tbody>{tableBody}</tbody>
       </table>
-      <button onClick={requestUpdate}>Update</button>
-      <button onClick={clearStorage}>Clear</button>
+      <button className="experiments-update" onClick={requestUpdate}>Update</button>
+      {/*  <button onClick={clearStorage}>Clear</button> */}
     </div>
   );
 }
