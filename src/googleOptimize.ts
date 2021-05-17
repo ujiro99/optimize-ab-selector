@@ -14,14 +14,21 @@ const GO_PREFIX = "GAX1.2.";
  * @returns {Promise<Experiment[]>}
  */
 export async function list(url: string): Promise<Experiment[]> {
-  const { value } = await Cookie.get({
+  const cookie = await Cookie.get({
     url: url,
     name: GO_COOKIE_KEY,
   });
 
-  const experiments = parseGaexp(value);
+  if (cookie == null) {
+    // Google optimize experiments doesn't exist on this page.
+    return [];
+  }
+
+  const experiments = parseGaexp(cookie.value);
   for (const expe of experiments) {
-    Log.d(`id: ${expe.testId}, pattern: ${expe.patterns[0].number}, name: ${expe.name}`);
+    Log.d(
+      `id: ${expe.testId}, pattern: ${expe.patterns[0].number}, name: ${expe.name}`
+    );
   }
 
   // if (typeof dataLayer !== "undefined") {
@@ -38,7 +45,11 @@ export async function list(url: string): Promise<Experiment[]> {
  * @param {string} testId Test id on Google Optimize.
  * @param {number} patternNumber Pattern No on Google Optimize.
  */
-export async function setPattern(url: string, testId: string, patternNumber: number) {
+export async function setPattern(
+  url: string,
+  testId: string,
+  patternNumber: number
+) {
   Log.d(`set Pattern: ${url} ${testId} ${patternNumber}`);
 
   // Set pattern number.
@@ -52,8 +63,8 @@ export async function setPattern(url: string, testId: string, patternNumber: num
     {
       testId: testId,
       name: undefined,
-      number: patternNumber
-    }
+      number: patternNumber,
+    },
   ];
 
   // Generate new cookie value.
