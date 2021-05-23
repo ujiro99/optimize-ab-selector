@@ -12,28 +12,48 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   Log.d(param);
 
   // onMessage must return "true" if response is async.
-  let isAsync = false;
+  let func = onMessageFuncs[command];
+  if (func) {
+    return func(param, sendResponse);
+  }
+  Log.w("command not found: " + command);
 
-  if (command === "currentExperiments") {
+  return false;
+});
+
+const onMessageFuncs = {
+  /**
+   * Returns Lists of experiment founds in Cookie.
+   */
+  currentExperiments(param: any, sendResponse: Function) {
     // find experiments in Cookie.
     Optimize.list(param.url).then((experiments) => {
       sendResponse(experiments);
     });
+    return true;
+  },
 
-    isAsync = true;
-  } else if (command === "switchPattern") {
+  /**
+   * Switch a pattern of experiment.
+   */
+  switchPattern(param: any, sendResponse: Function) {
     const url = param.url;
     const patterns = param.patterns;
     let p: Promise<any> = Promise.resolve();
     patterns.forEach((pattern: ExperimentPattern) => {
-      p = p.then(() =>
-        Optimize.setPattern(url, pattern.testId, pattern.number)
-      );
+      p = p.then(() => {
+        Optimize.switchPattern(url, pattern.testId, pattern.number);
+        sendResponse(true);
+      });
     });
 
-    sendResponse(true);
-    isAsync = true;
-  } else if (command == "addExperiment") {
+    return true;
+  },
+
+  /**
+   * Add and save experiment to chrome storage.
+   */
+  addExperiment(param: any, sendResponse: Function) {
     if (param == null) {
       Log.w("experiment is null");
     }
@@ -56,23 +76,31 @@ chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
       });
     });
 
-    isAsync = true;
-  } else if (command == "getSavedExperiments") {
+    return true;
+  },
+
+  /**
+   * Get saved experiments form chrome storage.
+   */
+  getSavedExperiments(_: any, sendResponse: Function) {
     Storage.get("experiments").then((experiments) => {
       sendResponse(experiments);
     });
 
-    isAsync = true;
-  } else if (command == "clearStorage") {
+    return true;
+  },
+
+  /**
+   * Remove all data in chrome storage.
+   */
+  clearStorage(_: any, sendResponse: Function) {
     Storage.clear().then((res) => {
       sendResponse(res);
     });
 
-    isAsync = true;
-  }
-
-  return isAsync;
-});
+    return true;
+  },
+};
 
 chrome.tabs.onActivated.addListener(function () {
   chrome.browserAction.setBadgeText({

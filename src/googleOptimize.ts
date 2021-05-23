@@ -39,13 +39,13 @@ export async function list(url: string): Promise<Experiment[]> {
 }
 
 /**
- * Set a pattern of experiment.
+ * Switch a pattern of experiment.
  *
  * @param {string} url Target page url.
  * @param {string} testId Test id on Google Optimize.
  * @param {number} patternNumber Pattern No on Google Optimize.
  */
-export async function setPattern(
+export async function switchPattern(
   url: string,
   testId: string,
   patternNumber: number
