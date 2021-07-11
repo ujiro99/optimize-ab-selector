@@ -9,3 +9,11 @@ export const ExperimentStatus = {
   Ended: "Ended",
   Archived: "Archived",
 };
+
+/**
+ * Extension icon status.
+ */
+export const IconStatus = {
+  Active: "Active",
+  Unavailable: "Unavailable",
+};

@@ -1,8 +1,11 @@
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import { IconStatus } from "@/constants";
 
 import Log from "@/log";
 import Storage from "@/storage";
 import * as Optimize from "@/googleOptimize";
+
+type IconStatus = typeof IconStatus[keyof typeof IconStatus];
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   // do not use async/await here !
@@ -96,6 +99,41 @@ const onMessageFuncs = {
   },
 
   /**
+   * Set extension icon status.
+   */
+  setIconStatus(param: any, sendResponse: Function) {
+    const status: IconStatus = param.status;
+    if (status === IconStatus.Active) {
+      chrome.browserAction.setIcon(
+        {
+          path: {
+            "16": "icon16.png",
+            "48": "icon48.png",
+            "128": "icon128.png",
+          },
+        },
+        () => {
+          sendResponse();
+        }
+      );
+    } else {
+      chrome.browserAction.setIcon(
+        {
+          path: {
+            "16": "icon_gray16.png",
+            "48": "icon_gray48.png",
+            "128": "icon_gray128.png",
+          },
+        },
+        () => {
+          sendResponse();
+        }
+      );
+    }
+    return true;
+  },
+
+  /**
    * Remove all data in chrome storage.
    */
   clearStorage(_: any, sendResponse: Function) {
@@ -117,7 +155,7 @@ const onMessageFuncs = {
       color: "",
     });
     return false;
-  }
+  },
 };
 
 chrome.tabs.onActivated.addListener(function () {
