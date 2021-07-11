@@ -64,6 +64,9 @@ const onMessageFuncs = {
     chrome.browserAction.setBadgeText({
       text: "!",
     });
+    chrome.browserAction.setBadgeBackgroundColor({
+      color: "#555555",
+    });
 
     // save experiment to chrome storage.
     const newExperiment = param.experiment;
@@ -102,6 +105,19 @@ const onMessageFuncs = {
 
     return true;
   },
+
+  /**
+   * Remove text from extension badge.
+   */
+  clearBadge(_: any, __: Function) {
+    chrome.browserAction.setBadgeText({
+      text: "",
+    });
+    chrome.browserAction.setBadgeBackgroundColor({
+      color: "",
+    });
+    return false;
+  }
 };
 
 chrome.tabs.onActivated.addListener(function () {

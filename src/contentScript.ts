@@ -140,6 +140,9 @@ const dialogObserver = new MutationObserver((mutations) => {
 
 window.addEventListener("hashchange", function () {
   Log.d("The hash has changed.");
+  chrome.runtime.sendMessage({
+    command: "clearBadge",
+  });
   tryParse(), false;
 });
 

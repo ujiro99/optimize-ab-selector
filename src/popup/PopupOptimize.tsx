@@ -41,7 +41,7 @@ export default function PopupOptimize(props: any) {
     const tableBody = experiments.map((expe) => {
       return (
         <tr key={expe.testId}>
-          <td>
+          <td className="table-body__name">
             <ExperimentName experiment={expe} />
           </td>
           <td>
