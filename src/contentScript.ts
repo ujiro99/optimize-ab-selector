@@ -1,5 +1,5 @@
-import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d"
-import { ExperimentStatus } from "@/constants"
+import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import { ExperimentStatus } from "@/constants";
 
 import Log from "./log";
 
@@ -80,12 +80,33 @@ function parse(): Experiment {
     );
     if (icon != null) {
       experiment.status = statusDefine[i].status;
-      Log.d("scheduled: " + experiment.name);
+      Log.d("status: " + experiment.status);
       break;
     }
   }
 
   return experiment;
+}
+
+function tryParse() {
+  const navLink = document.querySelector("#suite-top-nav .md-nav-bar a");
+  if (navLink != null) {
+    if (navLink.className.match(/md-active/) != null) {
+      // The DOM is updated asynchronously.
+      // Monitor the loading dialog, and parse after the DOM is updated.
+      const dialog = document.getElementsByClassName("opt-busy-dialog")[0];
+      if (dialog != null) {
+        Log.d("start dialog observer.");
+        isFound = false;
+        dialogObserver.observe(dialog, {
+          attributes: true,
+          attributeFilter: ["class"],
+        });
+      }
+    }
+  } else {
+    Log.d("nav-bar not found");
+  }
 }
 
 /**
@@ -117,26 +138,9 @@ const dialogObserver = new MutationObserver((mutations) => {
   });
 });
 
-window.addEventListener(
-  "hashchange",
-  function () {
-    Log.d("The hash has changed.");
-    const navLink = document.querySelector("#suite-top-nav .md-nav-bar a");
-    if (navLink != null) {
-      if (navLink.className.match(/md-active/) != null) {
-        // The DOM is updated asynchronously.
-        // Monitor the loading dialog, and parse after the DOM is updated.
-        const dialog = document.getElementsByClassName("opt-busy-dialog")[0];
-        if (dialog != null) {
-          Log.d("start dialog observer.");
-          isFound = false;
-          dialogObserver.observe(dialog, {
-            attributes: true,
-            attributeFilter: ["class"],
-          });
-        }
-      }
-    }
-  },
-  false
-);
+window.addEventListener("hashchange", function () {
+  Log.d("The hash has changed.");
+  tryParse(), false;
+});
+
+tryParse();
