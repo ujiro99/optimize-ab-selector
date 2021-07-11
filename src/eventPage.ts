@@ -64,10 +64,10 @@ const onMessageFuncs = {
     }
 
     // show icon
-    chrome.browserAction.setBadgeText({
+    chrome.action.setBadgeText({
       text: "!",
     });
-    chrome.browserAction.setBadgeBackgroundColor({
+    chrome.action.setBadgeBackgroundColor({
       color: "#555555",
     });
 
@@ -104,7 +104,7 @@ const onMessageFuncs = {
   setIconStatus(param: any, sendResponse: Function) {
     const status: IconStatus = param.status;
     if (status === IconStatus.Active) {
-      chrome.browserAction.setIcon(
+      chrome.action.setIcon(
         {
           path: {
             "16": "icon16.png",
@@ -117,7 +117,7 @@ const onMessageFuncs = {
         }
       );
     } else {
-      chrome.browserAction.setIcon(
+      chrome.action.setIcon(
         {
           path: {
             "16": "icon_gray16.png",
@@ -148,10 +148,10 @@ const onMessageFuncs = {
    * Remove text from extension badge.
    */
   clearBadge(_: any, __: Function) {
-    chrome.browserAction.setBadgeText({
+    chrome.action.setBadgeText({
       text: "",
     });
-    chrome.browserAction.setBadgeBackgroundColor({
+    chrome.action.setBadgeBackgroundColor({
       color: "",
     });
     return false;
@@ -159,7 +159,7 @@ const onMessageFuncs = {
 };
 
 chrome.tabs.onActivated.addListener(function () {
-  chrome.browserAction.setBadgeText({
+  chrome.action.setBadgeText({
     text: "",
   });
 });

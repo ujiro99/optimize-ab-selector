@@ -1,42 +1,37 @@
 {
-    "manifest_version": 2,
+  "manifest_version": 3,
 
-    "name": "Optimize AB Selector",
-    "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
-    "version": "0.1.0",
+  "name": "Optimize AB Selector",
+  "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
+  "version": "0.1.0",
 
-    "browser_action": {
-        "default_icon": "icon16.png",
-        "default_popup": "popup.html"
+  "action": {
+    "default_icon": "icon16.png",
+    "default_popup": "popup.html"
+  },
+
+  "background": {
+    "service_worker": "eventPage.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://optimize.google.com/*"],
+      "js": ["js/contentScript.js"]
     },
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["js/optimizeStatusCheck.js"]
+    }
+  ],
 
-    "background": {
-        "scripts": ["js/eventPage.js"],
-        "persistent": false
-    },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
 
-    "content_scripts": [
-      {
-        "matches": ["https://optimize.google.com/*"],
-        "js": ["js/contentScript.js"]
-      },
-      {
-        "matches": ["http://*/*", "https://*/*"],
-        "js": ["js/optimizeStatusCheck.js"]
-      }
-    ],
+  "permissions": ["cookies", "tabs", "storage"],
 
-    "icons": {
-        "16": "icon16.png",
-        "48": "icon48.png",
-        "128": "icon128.png"
-    },
-
-    "permissions": [
-      "cookies",
-      "tabs",
-      "storage",
-      "http://*/*",
-      "https://*/*"
-    ]
+  "host_permissions": ["http://*/*", "https://*/*"]
 }
