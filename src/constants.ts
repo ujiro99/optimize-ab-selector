@@ -6,6 +6,6 @@ export const ExperimentStatus = {
   Running: "Running",
   Scheduled: "Scheduled",
   Draft: "Draft",
-  Finished: "Finished",
+  Ended: "Ended",
   Archived: "Archived",
 };

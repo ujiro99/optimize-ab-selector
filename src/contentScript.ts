@@ -67,7 +67,7 @@ function parse(): Experiment {
 
   // status
   const statusDefine = [
-    { status: ExperimentStatus.Finished, iconName: "ic_status_ended_white" },
+    { status: ExperimentStatus.Ended, iconName: "ic_status_ended_white" },
     { status: ExperimentStatus.Archived, iconName: "archive" },
     { status: ExperimentStatus.Draft, iconName: "error_outline" },
     { status: ExperimentStatus.Scheduled, iconName: "access_time" },

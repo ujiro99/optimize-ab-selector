@@ -18,7 +18,7 @@ export default function PopupOptimize(props: any) {
     .filter(
       (s) =>
         s.status === ExperimentStatus.Archived ||
-        s.status === ExperimentStatus.Finished
+        s.status === ExperimentStatus.Ended
     )
     .sort((a) => (equalsOptimizeUrl(url, a.optimizeUrl) ? -1 : 1));
 
