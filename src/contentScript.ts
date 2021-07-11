@@ -1,3 +1,6 @@
+import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d"
+import { ExperimentStatus } from "@/constants"
+
 import Log from "./log";
 
 /**
@@ -11,7 +14,8 @@ function parse(): Experiment {
     expire: undefined,
     targetUrl: undefined,
     optimizeUrl: undefined,
-    finished: false,
+    editorPageUrl: undefined,
+    status: ExperimentStatus.None,
   };
 
   const idDom = document.querySelector(".opt-ga-tracking-id");
@@ -29,6 +33,7 @@ function parse(): Experiment {
     Log.d("name: " + experiment.name);
   }
 
+  // patterns
   const patternDoms = document.querySelectorAll(".opt-variation-name");
   const patterns: ExperimentPattern[] = [];
   patternDoms.forEach((p, index) => {
@@ -41,21 +46,44 @@ function parse(): Experiment {
   });
   experiment.patterns = patterns;
 
+  // targetUrl
   const targetDom: HTMLElement = document.querySelector(".opt-predicate-value");
   if (targetDom != null) {
     experiment.targetUrl = targetDom.innerText.trim();
     Log.d("target: " + targetDom.innerText);
   }
 
-  const finishSymbol = document.querySelector(
-    '[md-svg-icon="ic_status_ended_white"]'
+  // editorPageUrl
+  const editorPageUrldom: HTMLElement = document.querySelector(
+    ".opt-experience-editor-url .opt-ellide"
   );
-  if (finishSymbol != null) {
-    experiment.finished = true;
-    Log.d("finished: " + experiment.finished);
+  if (editorPageUrldom != null) {
+    experiment.editorPageUrl = editorPageUrldom.innerText.trim();
+    Log.d("editor page url: " + experiment.editorPageUrl);
   }
 
+  // optimizeUrl
   experiment.optimizeUrl = location.href;
+
+  // status
+  const statusDefine = [
+    { status: ExperimentStatus.Finished, iconName: "ic_status_ended_white" },
+    { status: ExperimentStatus.Archived, iconName: "archive" },
+    { status: ExperimentStatus.Draft, iconName: "error_outline" },
+    { status: ExperimentStatus.Scheduled, iconName: "access_time" },
+    { status: ExperimentStatus.Running, iconName: "ic_status_running_white" },
+  ];
+
+  for (let i = 0; i < statusDefine.length; i++) {
+    const icon = document.querySelector(
+      '[md-svg-icon="' + statusDefine[i].iconName + '"]'
+    );
+    if (icon != null) {
+      experiment.status = statusDefine[i].status;
+      Log.d("scheduled: " + experiment.name);
+      break;
+    }
+  }
 
   return experiment;
 }

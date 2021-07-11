@@ -1,15 +1,31 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import Tabs from "../tabs";
-import Popup from "./Popup";
-import PopupOptimize from "./PopupOptimize";
+import Tabs from "@/tabs";
+import Popup from "@/popup/Popup";
+import PopupOptimize from "@/popup/PopupOptimize";
 
 async function initPopup() {
   const tab = await Tabs.getCurrentTab();
 
   const inOptimize = tab.url.match(/optimize.google.com/) != null;
 
-  if (!inOptimize) {
+  if (inOptimize) {
+    chrome.runtime.sendMessage(
+      {
+        command: "getSavedExperiments",
+      },
+      function (savedExperiments) {
+        ReactDOM.render(
+          <PopupOptimize
+            url={tab.url}
+            tabId={tab.id}
+            saved={savedExperiments}
+          />,
+          document.getElementById("popup")
+        );
+      }
+    );
+  } else {
     chrome.runtime.sendMessage(
       {
         command: "currentExperiments",
@@ -33,22 +49,6 @@ async function initPopup() {
               document.getElementById("popup")
             );
           }
-        );
-      }
-    );
-  } else {
-    chrome.runtime.sendMessage(
-      {
-        command: "getSavedExperiments",
-      },
-      function (savedExperiments) {
-        ReactDOM.render(
-          <PopupOptimize
-            url={tab.url}
-            tabId={tab.id}
-            saved={savedExperiments}
-          />,
-          document.getElementById("popup")
         );
       }
     );

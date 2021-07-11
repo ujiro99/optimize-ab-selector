@@ -1,6 +1,8 @@
-import Log from "./log";
-import Storage from "./storage";
-import * as Optimize from "./googleOptimize";
+import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+
+import Log from "@/log";
+import Storage from "@/storage";
+import * as Optimize from "@/googleOptimize";
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   // do not use async/await here !

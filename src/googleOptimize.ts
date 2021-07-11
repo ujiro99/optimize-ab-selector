@@ -1,5 +1,7 @@
-import Log from "./log";
-import Cookie from "./cookie";
+import { Experiment } from "@/@types/googleOptimize.d"
+import { ExperimentStatus } from "@/constants";
+import Log from "@/log";
+import Cookie from "@/cookie";
 
 /** Key name of Google Optimize cookie */
 const GO_COOKIE_KEY = "_gaexp";
@@ -27,7 +29,7 @@ export async function list(url: string): Promise<Experiment[]> {
   const experiments = parseGaexp(cookie.value);
   for (const expe of experiments) {
     Log.d(
-      `id: ${expe.testId}, pattern: ${expe.patterns[0].number}, name: ${expe.name}`
+      `id: ${expe.testId}, pattern: ${expe.patterns[0].number}`
     );
   }
 
@@ -102,9 +104,22 @@ function parseGaexp(value: string): Experiment[] {
       expire: +es[1], // to be number
       targetUrl: undefined,
       optimizeUrl: undefined,
-      finished: false,
+      editorPageUrl: undefined,
+      status: ExperimentStatus.Running
     };
   });
+}
+
+/**
+ * Determine if the URL of the Google Optimize page is the same page.
+ * @param {string} a First url.
+ * @param {string} b Second url.
+ */
+export function equalsOptimizeUrl(a:string, b:string) {
+  if (!a || !b) { return false; }
+  const hashA = (new URL(a)).hash.replace("/report", "");
+  const hashB = (new URL(b)).hash.replace("/report", "");
+  return hashA === hashB
 }
 
 function initializeOtimizeCallback() {

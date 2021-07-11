@@ -11,13 +11,7 @@ body {
   font-size: 12px;
   width: 700px;
   height: auto;
-}
-
-.experiments-table {
-  th,
-  td {
-    border: solid 1px;
-  }
+  padding: 10px 16px 0;
 }
 
 .experiments-table {
@@ -25,6 +19,11 @@ body {
   border-spacing: 0;
   width: 100%;
   table-layout: fixed;
+
+  th,
+  td {
+    border: solid 1px;
+  }
 
   th {
     padding: 6px 0;
@@ -35,13 +34,15 @@ body {
     padding: 8px;
     max-width: 300px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
-  thead,
-  tr:nth-child(2n) {
+  thead {
     background-color: #eee;
+  }
+
+  &__caption {
+    font-size: 14px;
+    text-align: left;
   }
 
   &__testId {
@@ -58,6 +59,11 @@ body {
   &__name {
     width: 300px - 1px;
   }
+
+  &__select {
+    width: 100%;
+  }
+
   // &__target-url {
   //   width: 250px - 1px;
   // }
@@ -66,8 +72,26 @@ body {
   // }
 }
 
+.experiments-table + .experiments-table {
+  margin-top: 10px;
+}
+
 .experiments-update {
   margin: 8px;
   position: relative;
-  left: 89vw;
+  left: 89%;
+}
+
+.table-body {
+  &__name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.patterns {
+  &__list {
+    padding: 0 0 0 20px;
+    margin: 0;
+  }
 }

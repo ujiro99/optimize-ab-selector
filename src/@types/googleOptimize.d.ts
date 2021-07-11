@@ -1,3 +1,5 @@
+import { ExperimentStatus } from "@/constants";
+
 /**
  * Information of an experiment
  */
@@ -7,8 +9,9 @@ interface Experiment {
   patterns: ExperimentPattern[];
   expire: number;
   targetUrl: string;
-  finished: boolean;
   optimizeUrl: string;
+  editorPageUrl: string;
+  status: ExperimentStatus;
 }
 
 /**
@@ -19,3 +22,8 @@ interface ExperimentPattern {
   name: string;
   number: number;
 }
+
+/**
+ * Experiment status type.
+ */
+type ExperimentStatus = typeof ExperimentStatus[keyof typeof ExperimentStatus]
