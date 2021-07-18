@@ -52,6 +52,79 @@ export function ExperimentTarget(props: any) {
   );
 }
 
+/**
+ * Patterns of experiment.
+ *
+ * @param props.patterns {ExperimentPattern[]} Information of patterns of experiment.
+ * @param props.selected {number} Pattern number.
+ * @param props.onChange {Function} Callback function to be executed when pattern is selected.
+ */
+export function ExperimentPatterns(props: any) {
+  const patterns: ExperimentPattern[] = props.patterns;
+  const selected: number = props.selected;
+  if (patterns.length === 1) {
+    const expe = patterns[0];
+    return (
+      <input
+        name={expe.testId}
+        type="text"
+        value={expe.number}
+        onChange={props.onChange}
+      />
+    );
+  } else if (patterns.length > 1) {
+    const id = patterns[0].testId;
+    return (
+      <select
+        name={id}
+        onChange={props.onChange}
+        value={selected}
+        className="experiments-table__select"
+      >
+        {patterns.map((p) => (
+          <option key={p.name || p.number} value={p.number}>
+            {p.name || p.number}
+          </option>
+        ))}
+      </select>
+    );
+  } else {
+    Log.w("Pattern not found");
+  }
+}
+
+// Construct Google Optimize's information table.
+export function TableBody(props: any) {
+  const experiments: Experiment[] = props.experiments;
+  const selectedPatterns: ExperimentPattern[] = props.patterns;
+  const url: string = props.url;
+  const onChangePattern: Function = props.changePattern;
+  const tableBody = [];
+  for (const expe of experiments) {
+    const selected = selectedPatterns.find((s) => s.testId === expe.testId);
+    if (selected) {
+      tableBody.push(
+        <tr key={expe.testId}>
+          <td className="table-body__name">
+            <ExperimentName experiment={expe} />
+          </td>
+          <td>
+            <ExperimentTarget experiment={expe} url={url} />
+          </td>
+          <td>
+            <ExperimentPatterns
+              patterns={expe.patterns}
+              selected={selected.number}
+              onChange={onChangePattern}
+            />
+          </td>
+        </tr>
+      );
+    }
+  }
+  return <tbody>{tableBody}</tbody>;
+}
+
 export default function Popup(props: any) {
   const url = props.url;
   const tabId = props.tabId;
@@ -106,70 +179,6 @@ export default function Popup(props: any) {
     setSelectedPatterns(copied);
   }
 
-  function Patterns(props: any) {
-    const patterns: ExperimentPattern[] = props.patterns;
-    const selected: number = props.selected;
-    if (patterns.length === 1) {
-      const expe = patterns[0];
-      return (
-        <input
-          name={expe.testId}
-          type="text"
-          value={expe.number}
-          onChange={props.onChange}
-        />
-      );
-    } else if (patterns.length > 1) {
-      const id = patterns[0].testId;
-      return (
-        <select
-          name={id}
-          onChange={props.onChange}
-          value={selected}
-          className="experiments-table__select"
-        >
-          {patterns.map((p) => (
-            <option key={p.name || p.number} value={p.number}>
-              {p.name || p.number}
-            </option>
-          ))}
-        </select>
-      );
-    } else {
-      Log.w("Pattern not found");
-    }
-  }
-
-  // Construct Google Optimize's information table.
-  function TableBody(props: any) {
-    const experiments: Experiment[] = props.experiments;
-    const selectedPatterns: ExperimentPattern[] = props.patterns;
-    const tableBody = [];
-    for (const expe of experiments) {
-      const selected = selectedPatterns.find((s) => s.testId === expe.testId);
-      if (selected) {
-        tableBody.push(
-          <tr key={expe.testId}>
-            <td className="table-body__name">
-              <ExperimentName experiment={expe} />
-            </td>
-            <td>
-              <ExperimentTarget experiment={expe} url={url} />
-            </td>
-            <td>
-              <Patterns
-                patterns={expe.patterns}
-                selected={selected.number}
-                onChange={changePattern}
-              />
-            </td>
-          </tr>
-        );
-      }
-    }
-    return <tbody>{tableBody}</tbody>;
-  }
-
   // Show popup window.
   return (
     <div className="popupContainer">
@@ -181,7 +190,12 @@ export default function Popup(props: any) {
             <th className="experiments-table__pattern">Pattern</th>
           </tr>
         </thead>
-        <TableBody experiments={savedExperiments} patterns={selectedPatterns} />
+        <TableBody
+          url={url}
+          experiments={savedExperiments}
+          patterns={selectedPatterns}
+          changePattern={changePattern}
+        />
       </table>
       <button className="experiments-update" onClick={requestUpdate}>
         Apply
