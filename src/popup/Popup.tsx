@@ -12,7 +12,7 @@ import Log from "@/log";
  *
  * @param props.experiment {Experiment} Experiment Object to display.
  */
-export function ExperimentName(props: any) {
+function ExperimentName(props: any) {
   const experiment: Experiment = props.experiment;
   return (
     <a
@@ -32,7 +32,7 @@ export function ExperimentName(props: any) {
  * @param props.experiment {Experiment} Experiment Object to display.
  * @param props.url {string} URL of current tab.
  */
-export function ExperimentTarget(props: any) {
+function ExperimentTarget(props: any) {
   const experiment: Experiment = props.experiment;
   const url: string = props.url;
 
@@ -59,7 +59,7 @@ export function ExperimentTarget(props: any) {
  * @param props.selected {number} Pattern number.
  * @param props.onChange {Function} Callback function to be executed when pattern is selected.
  */
-export function ExperimentPatterns(props: any) {
+function ExperimentPatterns(props: any) {
   const patterns: ExperimentPattern[] = props.patterns;
   const selected: number = props.selected;
   if (patterns.length === 1) {
@@ -95,9 +95,10 @@ export function ExperimentPatterns(props: any) {
 
 // Construct Google Optimize's information table.
 export function TableBody(props: any) {
-  const experiments: Experiment[] = props.experiments;
-  const selectedPatterns: ExperimentPattern[] = props.patterns;
+  const experiments: Experiment[] = props.experiments || [];
+  const selectedPatterns: ExperimentPattern[] = props.patterns || [];
   const url: string = props.url;
+  const ExperimentPatterns = props.experimentPatternsComponent;
   const onChangePattern: Function = props.changePattern;
   const tableBody = [];
   for (const expe of experiments) {
@@ -117,6 +118,20 @@ export function TableBody(props: any) {
               selected={selected.number}
               onChange={onChangePattern}
             />
+          </td>
+        </tr>
+      );
+    } else {
+      tableBody.push(
+        <tr key={expe.testId}>
+          <td className="table-body__name">
+            <ExperimentName experiment={expe} />
+          </td>
+          <td>
+            <ExperimentTarget experiment={expe} url={url} />
+          </td>
+          <td>
+            <ExperimentPatterns patterns={expe.patterns} />
           </td>
         </tr>
       );
@@ -195,6 +210,7 @@ export default function Popup(props: any) {
           experiments={savedExperiments}
           patterns={selectedPatterns}
           changePattern={changePattern}
+          experimentPatternsComponent={ExperimentPatterns}
         />
       </table>
       <button className="experiments-update" onClick={requestUpdate}>

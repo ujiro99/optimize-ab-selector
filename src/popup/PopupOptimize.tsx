@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
 import { ExperimentStatus } from "@/constants";
 import { equalsOptimizeUrl } from "@/googleOptimize";
-import { ExperimentName, ExperimentTarget } from "@/popup/Popup";
+import { TableBody } from "@/popup/Popup";
 
 import "./Popup.scss";
 import Log from "../log";
@@ -24,7 +24,7 @@ export default function PopupOptimize(props: any) {
 
   Log.d("url: " + url);
 
-  function Patterns(props: any) {
+  function ExperimentPatterns(props: any) {
     const patterns: ExperimentPattern[] = props.patterns;
     return (
       <ol className="patterns__list">
@@ -33,27 +33,6 @@ export default function PopupOptimize(props: any) {
         ))}
       </ol>
     );
-  }
-
-  // Construct Google Optimize's information table.
-  function TableBody(props: any) {
-    const experiments: Experiment[] = props.experiments;
-    const tableBody = experiments.map((expe) => {
-      return (
-        <tr key={expe.testId}>
-          <td className="table-body__name">
-            <ExperimentName experiment={expe} />
-          </td>
-          <td>
-            <ExperimentTarget experiment={expe} url={url} />
-          </td>
-          <td>
-            <Patterns patterns={expe.patterns} />
-          </td>
-        </tr>
-      );
-    });
-    return <tbody>{tableBody}</tbody>;
   }
 
   function Table(props: any) {
@@ -69,7 +48,11 @@ export default function PopupOptimize(props: any) {
             <th className="experiments-table__pattern">Patterns</th>
           </tr>
         </thead>
-        <TableBody experiments={experiments} />
+        <TableBody
+          url={url}
+          experiments={experiments}
+          experimentPatternsComponent={ExperimentPatterns}
+        />
       </table>
     );
   }
@@ -91,7 +74,7 @@ export default function PopupOptimize(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
-      <Table title="Active Experiments" experiments={activeExperiments} />
+      <Table title="Saved Experiments" experiments={activeExperiments} />
       <Table title="Finished Experiments" experiments={finishedExperiments} />
       <button className="experiments-update" onClick={clearStorage}>
         Clear
