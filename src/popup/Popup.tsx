@@ -20,7 +20,7 @@ function ExperimentName(props: any) {
       href={experiment.optimizeUrl}
       target="_blank"
     >
-      <span className="experiments-table__testName">{experiment.name}</span>
+      <span className="experiments-table__testName" title={experiment.name}>{experiment.name}</span>
     </a>
   );
 }
@@ -36,6 +36,7 @@ function ExperimentReport(props: any) {
     <a
       className="experiments-table__optimize-report"
       href={experiment.optimizeUrl + "/report"}
+      title={experiment.optimizeUrl + "/report"}
       target="_blank"
     >
       <svg className="icon icon-open-outline">
@@ -64,6 +65,7 @@ function ExperimentTarget(props: any) {
     <a
       className="experiments-table__target-url"
       href={editorPageUrl}
+      title={editorPageUrl}
       target="_blank"
     >
       {editorPageUrl}
