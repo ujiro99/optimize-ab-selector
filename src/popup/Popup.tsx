@@ -4,7 +4,10 @@ import { ExperimentStatus } from "@/constants";
 import React, { useState } from "react";
 
 import "@/popup/Popup.scss";
-import { ExperimentsTable, ExperimentPatternProps } from "@/components/ExperimentsTable";
+import {
+  ExperimentsTable,
+  ExperimentPatternProps,
+} from "@/components/ExperimentsTable";
 import Tabs from "@/tabs";
 import Log from "@/log";
 
@@ -43,7 +46,7 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
     );
   } else {
     Log.w("Pattern not found");
-    return <div></div>
+    return <div></div>;
   }
 }
 
@@ -95,10 +98,20 @@ export default function Popup(props: any) {
     );
   }
 
-  function changePattern(e: any) {
+  function changePattern(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
     const copied: ExperimentPattern[] = Object.assign([], selectedPatterns);
     const pattern = copied.find((p) => p.testId === e.target.name);
-    pattern.number = e.target.value;
+    if (pattern) {
+      pattern.number = parseInt(e.target.value);
+    } else {
+      copied.push({
+        testId: e.target.name,
+        name: undefined,
+        number: parseInt(e.target.value),
+      });
+    }
     setSelectedPatterns(copied);
   }
 

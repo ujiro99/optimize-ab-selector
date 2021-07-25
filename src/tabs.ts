@@ -16,7 +16,9 @@ const Tabs = {
    * @param {number} tabId 対象タブのID
    */
   reload: (tabId: number) => {
-    chrome.tabs.reload(tabId);
+    chrome.tabs.reload(tabId, {
+      bypassCache: true, // bypass local caching.
+    });
   },
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import Log from "@/log";
 
 /**
  * Name of experiment.
@@ -79,46 +78,30 @@ function TableBody(props: any) {
   const onChangePattern: Function = props.changePattern;
   const tableBody = [];
   for (const expe of experiments) {
-    const selected = selectedPatterns.find((s) => s.testId === expe.testId);
-    if (selected) {
-      tableBody.push(
-        <tr key={expe.testId}>
-          <td className="table-body__name">
-            <ExperimentName experiment={expe} />
-          </td>
-          <td className="table-body__report">
-            <ExperimentReport experiment={expe} />
-          </td>
-          <td>
-            <ExperimentTarget experiment={expe} url={url} />
-          </td>
-          <td>
-            <ExperimentPatterns
-              patterns={expe.patterns}
-              selected={selected.number}
-              onChangePattern={onChangePattern}
-            />
-          </td>
-        </tr>
-      );
-    } else {
-      tableBody.push(
-        <tr key={expe.testId}>
-          <td className="table-body__name">
-            <ExperimentName experiment={expe} />
-          </td>
-          <td className="table-body__report">
-            <ExperimentReport experiment={expe} />
-          </td>
-          <td>
-            <ExperimentTarget experiment={expe} url={url} />
-          </td>
-          <td>
-            <ExperimentPatterns patterns={expe.patterns} />
-          </td>
-        </tr>
-      );
+    let selected = selectedPatterns.find((s) => s.testId === expe.testId);
+    if (!selected) {
+      selected = { testId: undefined, name: undefined, number: undefined };
     }
+    tableBody.push(
+      <tr key={expe.testId}>
+        <td className="table-body__name">
+          <ExperimentName experiment={expe} />
+        </td>
+        <td className="table-body__report">
+          <ExperimentReport experiment={expe} />
+        </td>
+        <td>
+          <ExperimentTarget experiment={expe} url={url} />
+        </td>
+        <td>
+          <ExperimentPatterns
+            patterns={expe.patterns}
+            selected={selected.number}
+            onChangePattern={onChangePattern}
+          />
+        </td>
+      </tr>
+    );
   }
   return <tbody>{tableBody}</tbody>;
 }
@@ -132,25 +115,34 @@ function TableBody(props: any) {
 export type ExperimentPatternProps = {
   patterns: ExperimentPattern[];
   selected: number;
-  onChangePattern: (event: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) => void;
+  onChangePattern: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
 };
 
+/**
+ * @typedef ExperimentsTableProps
+ *
+ * @param url {string} URL of current tab.
+ * @param experiments {Experiment[]} Experiment Object to display.
+ * @param experimentPatterns {React.VoidFunctionComponent} Component of experiment patterns.
+ * @param patterns {ExperimentPattern[]} Current Patterns.
+ * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
+ */
 type ExperimentsTableProps = {
   url: string;
   experiments: Experiment[];
   experimentPatterns: React.VoidFunctionComponent<ExperimentPatternProps>;
   patterns?: ExperimentPattern[];
-  onChangePattern?: Function;
+  onChangePattern?: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
 };
 
 /**
  * Table of experiments.
  *
- * @param props.url {string} URL of current tab.
- * @param props.experiments {Experiment[]} Experiment Object to display.
- * @param props.patterns {ExperimentPattern[]} Current Patterns.
- * @param props.onChangePattern {Function} Callback function to be executed when pattern is selected.
- * @param props.experimentPatterns {React.VoidFunctionComponent} Component of experiment patterns.
+ * @param props {ExperimentsTableProps}
  */
 export function ExperimentsTable({
   url,
