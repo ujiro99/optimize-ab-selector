@@ -123,6 +123,12 @@ function TableBody(props: any) {
   return <tbody>{tableBody}</tbody>;
 }
 
+/**
+ * @typedef ExperimentPatternProps
+ * @param patterns {ExperimentPattern[]} Information of patterns of experiment.
+ * @param selected {number} Pattern number.
+ * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
+ */
 export type ExperimentPatternProps = {
   patterns: ExperimentPattern[];
   selected: number;

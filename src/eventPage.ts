@@ -41,15 +41,18 @@ const onMessageFuncs = {
   /**
    * Switch a pattern of experiment.
    */
-  switchPattern(param: any, sendResponse: Function) {
+  switchPatterns(param: any, sendResponse: Function) {
     const url = param.url;
-    const patterns = param.patterns;
-    let p: Promise<any> = Promise.resolve();
-    patterns.forEach((pattern: ExperimentPattern) => {
-      p = p.then(() => {
-        Optimize.switchPattern(url, pattern.testId, pattern.number);
-        sendResponse(true);
-      });
+    const patterns: ExperimentPattern[] = param.patterns;
+    let switchPatterns: Optimize.SwitchPattern[] = patterns.map((p) => {
+      return {
+        testId: p.testId,
+        patternNumber: p.number,
+      };
+    });
+
+    Optimize.switchPatterns(url, switchPatterns).then(() => {
+      sendResponse(true);
     });
 
     return true;

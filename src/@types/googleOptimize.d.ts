@@ -26,4 +26,4 @@ interface ExperimentPattern {
 /**
  * Experiment status type.
  */
-type ExperimentStatus = typeof ExperimentStatus[keyof typeof ExperimentStatus]
+type ExperimentStatus = typeof ExperimentStatus[keyof typeof ExperimentStatus];

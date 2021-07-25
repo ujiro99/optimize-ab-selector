@@ -10,10 +10,6 @@ import Log from "@/log";
 
 /**
  * Patterns of experiment.
- *
- * @param props.patterns {ExperimentPattern[]} Information of patterns of experiment.
- * @param props.selected {number} Pattern number.
- * @param props.onChange {Function} Callback function to be executed when pattern is selected.
  */
 function ExperimentPatterns(props: ExperimentPatternProps) {
   const patterns: ExperimentPattern[] = props.patterns;
@@ -47,6 +43,7 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
     );
   } else {
     Log.w("Pattern not found");
+    return <div></div>
   }
 }
 
@@ -84,7 +81,7 @@ export default function Popup(props: any) {
     let parsed = new URL(url);
     chrome.runtime.sendMessage(
       {
-        command: "switchPattern",
+        command: "switchPatterns",
         parameter: {
           url: parsed.origin,
           patterns: selectedPatterns,
