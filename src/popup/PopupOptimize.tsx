@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
 import { ExperimentStatus } from "@/constants";
 import { equalsOptimizeUrl } from "@/googleOptimize";
-import { TableBody } from "@/popup/Popup";
 
-import "./Popup.scss";
-import Log from "../log";
+import {
+  ExperimentsTable,
+  ExperimentPatternProps,
+} from "@/components/ExperimentsTable";
+import "@/popup/Popup.scss";
+import Log from "@/log";
 
 export default function PopupOptimize(props: any) {
   const url = props.url;
@@ -39,22 +42,14 @@ export default function PopupOptimize(props: any) {
     const experiments = props.experiments;
     const title = props.title;
     return (
-      <table className="experiments-table">
-        <caption className="experiments-table__caption">{title}</caption>
-        <thead>
-          <tr>
-            <th className="experiments-table__name">Name</th>
-            <th className="experiments-table__report">Report</th>
-            <th className="experiments-table__target-url">Editor Page</th>
-            <th className="experiments-table__pattern">Patterns</th>
-          </tr>
-        </thead>
-        <TableBody
+      <div>
+        <span className="experiments-table__caption">{title}</span>
+        <ExperimentsTable
           url={url}
           experiments={experiments}
-          experimentPatternsComponent={ExperimentPatterns}
+          experimentPatterns={ExperimentPatterns}
         />
-      </table>
+      </div>
     );
   }
 
