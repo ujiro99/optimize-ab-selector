@@ -158,8 +158,9 @@ const onMessageFuncs = {
   },
 };
 
-chrome.tabs.onActivated.addListener(function () {
+chrome.tabs.onActivated.addListener(function (event) {
   chrome.action.setBadgeText({
     text: "",
   });
+  chrome.tabs.sendMessage(event.tabId, "checkBadge");
 });
