@@ -102,6 +102,7 @@ function ExperimentPatterns(props: any) {
         value={selected}
         className="experiments-table__select"
       >
+        <option>----</option>
         {patterns.map((p) => (
           <option key={p.name || p.number} value={p.number}>
             {p.name || p.number}
