@@ -211,6 +211,7 @@ export default function Popup(props: any) {
       () => {
         // Reload to reflect the changed cookie in the test.
         Tabs.reload(tabId);
+        window.close();
       }
     );
   }
