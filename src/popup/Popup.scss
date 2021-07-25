@@ -41,20 +41,30 @@ body {
     background-color: #eee;
   }
 
+  &__report {
+    width: 48px;
+  }
+
   &__caption {
     font-size: 14px;
     text-align: left;
   }
 
-  &__testId {
-    font-size: 10px;
-    display: block;
-  }
-
   &__testName {
     display: inline-block;
+    width: 100%;
     margin-top: 4px;
     text-decoration: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  &__optimize-report {
+    svg {
+      width: 1.2em;
+      height: 1.2em;
+    }
   }
 
   &__name {
@@ -78,15 +88,13 @@ body {
 }
 
 .experiments-update {
-  margin: 8px;
-  position: relative;
-  left: 89%;
+  display: block;
+  margin: 8px 0px 8px auto;
 }
 
 .table-body {
-  &__name {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  &__report {
+    text-align: center;
   }
 }
 
@@ -95,4 +103,13 @@ body {
     padding: 0 0 0 20px;
     margin: 0;
   }
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
 }

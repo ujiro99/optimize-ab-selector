@@ -44,6 +44,7 @@ export default function PopupOptimize(props: any) {
         <thead>
           <tr>
             <th className="experiments-table__name">Name</th>
+            <th className="experiments-table__report">Report</th>
             <th className="experiments-table__target-url">Editor Page</th>
             <th className="experiments-table__pattern">Patterns</th>
           </tr>

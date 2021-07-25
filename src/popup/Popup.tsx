@@ -20,8 +20,27 @@ function ExperimentName(props: any) {
       href={experiment.optimizeUrl}
       target="_blank"
     >
-      <span className="experiments-table__testId">{experiment.testId}</span>
       <span className="experiments-table__testName">{experiment.name}</span>
+    </a>
+  );
+}
+
+/**
+ * Link to report of experiment.
+ *
+ * @param props.experiment {Experiment} Experiment Object to display.
+ */
+function ExperimentReport(props: any) {
+  const experiment: Experiment = props.experiment;
+  return (
+    <a
+      className="experiments-table__optimize-report"
+      href={experiment.optimizeUrl + "/report"}
+      target="_blank"
+    >
+      <svg className="icon icon-open-outline">
+        <use xlinkHref="/img/icons.svg#icon-open-outline" />
+      </svg>
     </a>
   );
 }
@@ -109,6 +128,9 @@ export function TableBody(props: any) {
           <td className="table-body__name">
             <ExperimentName experiment={expe} />
           </td>
+          <td className="table-body__report">
+            <ExperimentReport experiment={expe} />
+          </td>
           <td>
             <ExperimentTarget experiment={expe} url={url} />
           </td>
@@ -126,6 +148,9 @@ export function TableBody(props: any) {
         <tr key={expe.testId}>
           <td className="table-body__name">
             <ExperimentName experiment={expe} />
+          </td>
+          <td className="table-body__report">
+            <ExperimentReport experiment={expe} />
           </td>
           <td>
             <ExperimentTarget experiment={expe} url={url} />
@@ -201,6 +226,7 @@ export default function Popup(props: any) {
         <thead>
           <tr>
             <th className="experiments-table__name">Name</th>
+            <th className="experiments-table__report">Report</th>
             <th className="experiments-table__target-url">Editor Page</th>
             <th className="experiments-table__pattern">Pattern</th>
           </tr>
