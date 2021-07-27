@@ -1,10 +1,14 @@
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
     "dist/js/popup": path.join(__dirname, "src/popup/index.tsx"),
     "dist/js/contentScript": path.join(__dirname, "src/contentScript.ts"),
-    "dist/js/optimizeStatusCheck": path.join(__dirname, "src/optimizeStatusCheck.ts"),
+    "dist/js/optimizeStatusCheck": path.join(
+      __dirname,
+      "src/optimizeStatusCheck.ts"
+    ),
     "dist/eventPage": path.join(__dirname, "src/eventPage.ts"),
   },
   output: {
@@ -33,6 +37,12 @@ module.exports = {
           },
         ],
       },
+      {
+        exclude: /node_modules/,
+        test: /\.json$/,
+        loader: "json-loader",
+        type: "javascript/auto",
+      },
     ],
   },
   resolve: {
@@ -41,4 +51,9 @@ module.exports = {
     },
     extensions: [".ts", ".tsx", ".js"],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [{ from: "src/_locales", to: "dist/_locales" }],
+    }),
+  ],
 };

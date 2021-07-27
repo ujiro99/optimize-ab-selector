@@ -1,0 +1,9 @@
+{
+  "extName": { "message": "Optimize AB Selector" },
+  "extDescription": {
+    "message": "Googleオプティマイズのテストパターンを選択できるようにします。"
+  },
+  "btnApply": {
+    "message": "適用"
+  }
+}

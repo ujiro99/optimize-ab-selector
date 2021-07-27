@@ -1,8 +1,7 @@
-import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/constants";
-
 import React, { useState } from "react";
 
+import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import { ExperimentStatus } from "@/constants";
 import "@/popup/Popup.scss";
 import {
   ExperimentsTable,
@@ -10,6 +9,7 @@ import {
 } from "@/components/ExperimentsTable";
 import Tabs from "@/tabs";
 import Log from "@/log";
+import * as i18n from "@/i18n";
 
 /**
  * Patterns of experiment.
@@ -126,7 +126,7 @@ export default function Popup(props: any) {
         experimentPatterns={ExperimentPatterns}
       />
       <button className="experiments-update" onClick={requestUpdate}>
-        Apply
+        {i18n.t('btnApply')}
       </button>
     </div>
   );
