@@ -8,15 +8,20 @@ import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
  */
 function ExperimentName(props: any) {
   const experiment: Experiment = props.experiment;
+  const nameExists = !!experiment.name;
   return (
     <a
       className="experiments-table__optimize-url"
       href={experiment.optimizeUrl}
       target="_blank"
     >
-      <span className="experiments-table__testName" title={experiment.name}>
-        {experiment.name}
-      </span>
+      {nameExists ? (
+        <span className="experiments-table__test-name" title={experiment.name}>
+          {experiment.name}
+        </span>
+      ) : (
+        <span className="experiments-table__test-id">{experiment.testId}</span>
+      )}
     </a>
   );
 }
@@ -28,18 +33,23 @@ function ExperimentName(props: any) {
  */
 function ExperimentReport(props: any) {
   const experiment: Experiment = props.experiment;
-  return (
-    <a
-      className="experiments-table__optimize-report"
-      href={experiment.optimizeUrl + "/report"}
-      title={experiment.optimizeUrl + "/report"}
-      target="_blank"
-    >
-      <svg className="icon icon-open-outline">
-        <use xlinkHref="/img/icons.svg#icon-open-outline" />
-      </svg>
-    </a>
-  );
+  const urlExists = !!experiment.optimizeUrl;
+  if (urlExists) {
+    return (
+      <a
+        className="experiments-table__optimize-report"
+        href={experiment.optimizeUrl + "/report"}
+        title={experiment.optimizeUrl + "/report"}
+        target="_blank"
+      >
+        <svg className="icon icon-open-outline">
+          <use xlinkHref="/img/icons.svg#icon-open-outline" />
+        </svg>
+      </a>
+    );
+  } else {
+    return <span>-</span>;
+  }
 }
 
 /**
@@ -57,16 +67,20 @@ function ExperimentTarget(props: any) {
     let parsed = new URL(url);
     editorPageUrl = parsed.origin + editorPageUrl;
   }
-  return (
-    <a
-      className="experiments-table__target-url"
-      href={editorPageUrl}
-      title={editorPageUrl}
-      target="_blank"
-    >
-      {editorPageUrl}
-    </a>
-  );
+  if (editorPageUrl != null) {
+    return (
+      <a
+        className="experiments-table__target-url"
+        href={editorPageUrl}
+        title={editorPageUrl}
+        target="_blank"
+      >
+        {editorPageUrl}
+      </a>
+    );
+  } else {
+    return <span>-</span>;
+  }
 }
 
 // Construct Google Optimize's information table.

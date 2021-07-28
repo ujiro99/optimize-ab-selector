@@ -103,13 +103,21 @@ export default function Popup(props: any) {
   ) {
     const copied: ExperimentPattern[] = Object.assign([], selectedPatterns);
     const pattern = copied.find((p) => p.testId === e.target.name);
+
+    let newVal: any;
+    if (e.target instanceof HTMLSelectElement) {
+      newVal = parseInt(e.target.value);
+    } else {
+      newVal = e.target.value;
+    }
+
     if (pattern) {
-      pattern.number = parseInt(e.target.value);
+      pattern.number = newVal;
     } else {
       copied.push({
         testId: e.target.name,
         name: undefined,
-        number: parseInt(e.target.value),
+        number: newVal,
       });
     }
     setSelectedPatterns(copied);
@@ -126,7 +134,7 @@ export default function Popup(props: any) {
         experimentPatterns={ExperimentPatterns}
       />
       <button className="experiments-update" onClick={requestUpdate}>
-        {i18n.t('btnApply')}
+        {i18n.t("btnApply")}
       </button>
     </div>
   );
