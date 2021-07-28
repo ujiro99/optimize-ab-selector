@@ -63,6 +63,7 @@ export default function PopupOptimize(props: any) {
       },
       () => {
         Log.d("clearStorage finished");
+        window.close();
       }
     );
   }
