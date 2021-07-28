@@ -56,11 +56,6 @@ export default function Popup(props: any) {
   const currentExperiments: Experiment[] = props.current || [];
   let savedExperiments: Experiment[] = props.saved || [];
 
-  // Narrow down to experiments that not finished.
-  savedExperiments = savedExperiments.filter(
-    (e) => e.status === ExperimentStatus.Running
-  );
-
   // Merge experiments found in cookies
   for (const expe of currentExperiments) {
     const found = savedExperiments.find((a) => a.testId === expe.testId);
@@ -68,6 +63,11 @@ export default function Popup(props: any) {
       savedExperiments.push(expe);
     }
   }
+
+  // Narrow down to experiments that not finished.
+  savedExperiments = savedExperiments.filter(
+    (e) => e.status === ExperimentStatus.Running
+  );
 
   Log.d(savedExperiments);
 
