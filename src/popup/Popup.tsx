@@ -7,6 +7,7 @@ import {
   ExperimentsTable,
   ExperimentPatternProps,
 } from "@/components/ExperimentsTable";
+import { Help } from "@/components/Help";
 import Tabs from "@/tabs";
 import Log from "@/log";
 import * as i18n from "@/i18n";
@@ -136,6 +137,7 @@ export default function Popup(props: any) {
       <button className="experiments-update" onClick={requestUpdate}>
         {i18n.t("btnApply")}
       </button>
+      <Help></Help>
     </div>
   );
 }

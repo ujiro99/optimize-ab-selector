@@ -11,5 +11,20 @@
   },
   "labelClear": {
     "message": "Are you sure you want to clear all saved Experiments?"
+  },
+  "helpTitle": {
+    "message": "Usage"
+  },
+  "helpStep1": {
+    "message": "First, open the \"Details\" tab on the the Google Optimize page displaying a experient."
+  },
+  "helpStep2": {
+    "message": "The Optimize AB Selector parse the test configuration from this page. When the parsing is completed successfully, the Optimize AB Selector icon will display a \"!\" mark."
+  },
+  "helpStep3": {
+    "message": "Click the Optimize AB Selector icon to display a parsed test configuration. Click a URL on the Editor Page to open a page where you are running a test."
+  },
+  "helpStep4": {
+    "message": "You can change a pattern on the test page. Select a pattern you want to change and click the Apply button."
   }
 }

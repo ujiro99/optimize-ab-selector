@@ -1,0 +1,33 @@
+.help {
+  padding: 10px 0 20px;
+
+  &__item {
+    padding: 10px;
+    margin: 8px 0 0 24px;
+    text-indent: -24px;
+    font-size: 16px;
+
+    img {
+      width: 100%;
+      display: block;
+      padding-top: 10px;
+    }
+
+    &.mod-step-1 {
+      img {
+        width: 300px;
+      }
+    }
+    &.mod-step-2 {
+      img {
+        width: 100px;
+      }
+    }
+  }
+
+  &__number {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+}
