@@ -2,6 +2,9 @@
   "name": "optimize-ab-selector",
   "version": "0.1.0",
   "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
@@ -15,12 +18,12 @@
     "@types/react-dom": "^16.9.14",
     "css-loader": "^3.6.0",
     "json-loader": "^0.5.7",
-    "node-sass": "^4.14.1",
+    "node-sass": "^6.0.1",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
     "ts-loader": "^4.0.1",
     "typescript": "^3.9.10",
-    "webpack": "^4.46.0",
+    "webpack": "^5.47.1",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^4.2.2"
   },
