@@ -6,6 +6,12 @@
   "btnApply": {
     "message": "適用"
   },
+  "btnHelp": {
+    "message": "ヘルプ"
+  },
+  "btnHelpClose": {
+    "message": "ヘルプを閉じる"
+  },
   "btnClear": {
     "message": "すべて消去"
   },

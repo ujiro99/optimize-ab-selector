@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
 import { ExperimentStatus } from "@/constants";
 import { equalsOptimizeUrl } from "@/googleOptimize";
-
 import { ExperimentsTable } from "@/components/ExperimentsTable";
-import "@/popup/Popup.scss";
+import { Help } from "@/components/Help";
+import { Accordion } from "@/components/Accordion";
 import Log from "@/log";
 import * as i18n from "@/i18n";
+
+import "@/popup/Popup.scss";
 
 export default function PopupOptimize(props: any) {
   const url = props.url;
@@ -25,6 +27,8 @@ export default function PopupOptimize(props: any) {
 
   Log.d("url: " + url);
 
+  const [helpVisible, setHelpVisible] = useState(false);
+
   function ExperimentPatterns(props: any) {
     const patterns: ExperimentPattern[] = props.patterns;
     return (
@@ -34,6 +38,10 @@ export default function PopupOptimize(props: any) {
         ))}
       </ol>
     );
+  }
+
+  function toggleHelp() {
+    setHelpVisible(!helpVisible);
   }
 
   /**
@@ -80,9 +88,24 @@ export default function PopupOptimize(props: any) {
         />
       </div>
 
-      <button className="experiments-update" onClick={clearStorage}>
-        {i18n.t("btnClear")}
-      </button>
+      <div className="experiments-buttons">
+        <button className="experiments-help" onClick={toggleHelp}>
+          {i18n.t("btnHelp")}
+        </button>
+        <button className="experiments-update" onClick={clearStorage}>
+          {i18n.t("btnClear")}
+        </button>
+      </div>
+
+      <Accordion isOpen={helpVisible}>
+        <Help />
+        <button
+          className="experiments-help__close"
+          onClick={() => setHelpVisible(false)}
+        >
+          {i18n.t("btnHelpClose")}
+        </button>
+      </Accordion>
     </div>
   );
 }

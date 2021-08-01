@@ -6,6 +6,12 @@
   "btnApply": {
     "message": "Apply"
   },
+  "btnHelp": {
+    "message": "Help"
+  },
+  "btnHelpClose": {
+    "message": "Close Help"
+  },
   "btnClear": {
     "message": "Clear"
   },

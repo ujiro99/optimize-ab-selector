@@ -8,6 +8,7 @@ import {
   ExperimentPatternProps,
 } from "@/components/ExperimentsTable";
 import { Help } from "@/components/Help";
+import { Accordion } from "@/components/Accordion";
 import Tabs from "@/tabs";
 import Log from "@/log";
 import * as i18n from "@/i18n";
@@ -69,14 +70,14 @@ export default function Popup(props: any) {
   savedExperiments = savedExperiments.filter(
     (e) => e.status === ExperimentStatus.Running
   );
-
   Log.d(savedExperiments);
 
   const [selectedPatterns, setSelectedPatterns] = useState(
     currentExperiments.map((c) => c.patterns[0])
   );
-
   Log.d(selectedPatterns);
+
+  const [helpVisible, setHelpVisible] = useState(false);
 
   /**
    * Request update a pattern.
@@ -97,6 +98,10 @@ export default function Popup(props: any) {
         window.close();
       }
     );
+  }
+
+  function toggleHelp() {
+    setHelpVisible(!helpVisible);
   }
 
   function changePattern(
@@ -134,10 +139,25 @@ export default function Popup(props: any) {
         onChangePattern={changePattern}
         experimentPatterns={ExperimentPatterns}
       />
-      <button className="experiments-update" onClick={requestUpdate}>
-        {i18n.t("btnApply")}
-      </button>
-      <Help></Help>
+
+      <div className="experiments-buttons">
+        <button className="experiments-help" onClick={toggleHelp}>
+          {i18n.t("btnHelp")}
+        </button>
+        <button className="experiments-update" onClick={requestUpdate}>
+          {i18n.t("btnApply")}
+        </button>
+      </div>
+
+      <Accordion isOpen={helpVisible}>
+        <Help />
+        <button
+          className="experiments-help__close"
+          onClick={() => setHelpVisible(false)}
+        >
+          {i18n.t("btnHelpClose")}
+        </button>
+      </Accordion>
     </div>
   );
 }

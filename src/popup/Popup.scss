@@ -98,9 +98,23 @@ body {
   margin-top: 10px;
 }
 
+.experiments-buttons {
+  margin: 8px 0;
+  text-align: right;
+}
+
 .experiments-update {
-  display: block;
-  margin: 8px 0px 8px auto;
+  display: inline-block;
+}
+
+.experiments-help {
+  display: inline-block;
+  margin: 0 8px;
+
+  &__close {
+    display: block;
+    margin: 8px auto;
+  }
 }
 
 .table-body {

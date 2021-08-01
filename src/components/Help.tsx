@@ -5,7 +5,7 @@ import * as i18n from "@/i18n";
 
 export function Help() {
   return (
-    <div className="help accordion">
+    <div className="help">
       <h2 className="help__title">{i18n.t("helpTitle")}</h2>
       <p className="help__item mod-step-1">
         <span className="help__number">1.</span>
