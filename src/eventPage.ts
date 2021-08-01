@@ -110,9 +110,9 @@ const onMessageFuncs = {
       chrome.action.setIcon(
         {
           path: {
-            "16": "icon16.png",
-            "48": "icon48.png",
-            "128": "icon128.png",
+            "16": "img/icon16.png",
+            "48": "img/icon48.png",
+            "128": "img/icon128.png",
           },
         },
         () => {
@@ -123,9 +123,9 @@ const onMessageFuncs = {
       chrome.action.setIcon(
         {
           path: {
-            "16": "icon_gray16.png",
-            "48": "icon_gray48.png",
-            "128": "icon_gray128.png",
+            "16": "img/icon_gray16.png",
+            "48": "img/icon_gray48.png",
+            "128": "img/icon_gray128.png",
           },
         },
         () => {
