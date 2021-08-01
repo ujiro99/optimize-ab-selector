@@ -3,12 +3,10 @@ import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
 import { ExperimentStatus } from "@/constants";
 import { equalsOptimizeUrl } from "@/googleOptimize";
 
-import {
-  ExperimentsTable,
-  ExperimentPatternProps,
-} from "@/components/ExperimentsTable";
+import { ExperimentsTable } from "@/components/ExperimentsTable";
 import "@/popup/Popup.scss";
 import Log from "@/log";
+import * as i18n from "@/i18n";
 
 export default function PopupOptimize(props: any) {
   const url = props.url;
@@ -42,15 +40,17 @@ export default function PopupOptimize(props: any) {
    * Delete all saved data.
    */
   function clearStorage() {
-    chrome.runtime.sendMessage(
-      {
-        command: "clearStorage",
-      },
-      () => {
-        Log.d("clearStorage finished");
-        window.close();
-      }
-    );
+    if (window.confirm(i18n.t("labelClear"))) {
+      chrome.runtime.sendMessage(
+        {
+          command: "clearStorage",
+        },
+        () => {
+          Log.d("clearStorage finished");
+          window.close();
+        }
+      );
+    }
   }
 
   // Show popup window.
@@ -81,7 +81,7 @@ export default function PopupOptimize(props: any) {
       </div>
 
       <button className="experiments-update" onClick={clearStorage}>
-        Clear
+        {i18n.t("btnClear")}
       </button>
     </div>
   );

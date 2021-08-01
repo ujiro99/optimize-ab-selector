@@ -5,5 +5,11 @@
   },
   "btnApply": {
     "message": "Apply"
+  },
+  "btnClear": {
+    "message": "Clear"
+  },
+  "labelClear": {
+    "message": "Are you sure you want to clear all saved Experiments?"
   }
 }

@@ -5,5 +5,11 @@
   },
   "btnApply": {
     "message": "適用"
+  },
+  "btnClear": {
+    "message": "すべて消去"
+  },
+  "labelClear": {
+    "message": "保存した全てのテストを消去してもよろしいですか？"
   }
 }
