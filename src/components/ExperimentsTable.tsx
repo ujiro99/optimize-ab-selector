@@ -107,7 +107,7 @@ function TableBody(props: any) {
         <td>
           <ExperimentTarget experiment={expe} url={url} />
         </td>
-        <td>
+        <td className="table-body__pattern">
           <ExperimentPatterns
             patterns={expe.patterns}
             selected={selected.number}

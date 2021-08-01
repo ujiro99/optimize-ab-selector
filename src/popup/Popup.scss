@@ -50,6 +50,12 @@ body {
     text-align: left;
   }
 
+  &__caption-icon {
+    font-size: 18px;
+    vertical-align: bottom;
+    margin-right: 5px;
+  }
+
   &__test-id {
     color: $primary-color;
   }
@@ -100,6 +106,20 @@ body {
   &__report {
     text-align: center;
   }
+
+  &__pattern {
+    input {
+      width: 100%;
+    }
+  }
+}
+
+td.table-body__pattern {
+  padding-right: 16px;
+}
+
+.finished-experiments {
+  margin-top: 10px;
 }
 
 .patterns {

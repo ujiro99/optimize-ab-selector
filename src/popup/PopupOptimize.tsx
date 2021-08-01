@@ -38,21 +38,6 @@ export default function PopupOptimize(props: any) {
     );
   }
 
-  function Table(props: any) {
-    const experiments = props.experiments;
-    const title = props.title;
-    return (
-      <div>
-        <span className="experiments-table__caption">{title}</span>
-        <ExperimentsTable
-          url={url}
-          experiments={experiments}
-          experimentPatterns={ExperimentPatterns}
-        />
-      </div>
-    );
-  }
-
   /**
    * Delete all saved data.
    */
@@ -71,8 +56,30 @@ export default function PopupOptimize(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
-      <Table title="Active Experiments" experiments={activeExperiments} />
-      <Table title="Finished Experiments" experiments={finishedExperiments} />
+      <div className="active-experiments">
+        <svg className="icon experiments-table__caption-icon">
+          <use xlinkHref="/img/icons.svg#icon-sunny-outline" />
+        </svg>
+        <span className="experiments-table__caption">Active Experiments</span>
+        <ExperimentsTable
+          url={url}
+          experiments={activeExperiments}
+          experimentPatterns={ExperimentPatterns}
+        />
+      </div>
+
+      <div className="finished-experiments">
+        <svg className="icon experiments-table__caption-icon">
+          <use xlinkHref="/img/icons.svg#icon-check-circle" />
+        </svg>
+        <span className="experiments-table__caption">Finished Experiments</span>
+        <ExperimentsTable
+          url={url}
+          experiments={finishedExperiments}
+          experimentPatterns={ExperimentPatterns}
+        />
+      </div>
+
       <button className="experiments-update" onClick={clearStorage}>
         Clear
       </button>
