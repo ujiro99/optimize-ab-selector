@@ -36,13 +36,7 @@ module.exports = {
             loader: "sass-loader", // Compiles Sass to CSS
           },
         ],
-      },
-      {
-        exclude: /node_modules/,
-        test: /\.json$/,
-        loader: "json-loader",
-        type: "javascript/auto",
-      },
+      }
     ],
   },
   resolve: {
@@ -53,7 +47,10 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin({
-      patterns: [{ from: "src/_locales", to: "dist/_locales" }],
+      patterns: [
+        { from: "src/_locales", to: "dist/_locales" },
+        { from: "src/img", to: "dist/img" },
+      ],
     }),
   ],
 };
