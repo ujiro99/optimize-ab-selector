@@ -71,7 +71,7 @@ export default function PopupOptimize(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
-      <Table title="Saved Experiments" experiments={activeExperiments} />
+      <Table title="Active Experiments" experiments={activeExperiments} />
       <Table title="Finished Experiments" experiments={finishedExperiments} />
       <button className="experiments-update" onClick={clearStorage}>
         Clear
