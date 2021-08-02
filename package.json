@@ -1,6 +1,6 @@
 {
   "name": "optimize-ab-selector",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
   "engines": {
     "node": "14.x"
@@ -8,7 +8,8 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
-    "watch": "webpack -w --config webpack.dev.js"
+    "watch": "webpack -w --config webpack.dev.js",
+    "zip": "zip -r build.zip dist"
   },
   "author": "Yujiro Takeda",
   "license": "MIT",
