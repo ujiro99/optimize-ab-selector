@@ -124,6 +124,7 @@ export default function Popup(props: any) {
     } else {
       copied.push({
         testId: e.target.name,
+        sectionName: undefined,
         name: undefined,
         number: newVal,
       });

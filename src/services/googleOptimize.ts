@@ -1,5 +1,5 @@
 import { Experiment } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/utils/constants";
+import { ExperimentStatus, ExperimentType } from "@/utils/constants";
 import Log from "@/services/log";
 import Cookie from "@/services/cookie";
 
@@ -74,6 +74,7 @@ export async function switchPatterns(
       target.patterns = [
         {
           testId: sw.testId,
+          sectionName: undefined,
           name: undefined,
           number: sw.patternNumber,
         },
@@ -116,16 +117,33 @@ function parseGaexp(value: string): Experiment[] {
   value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
+    const pattern = es[2];
+    let experimentType;
+    let patterns = [];
+    if (pattern.indexOf('-') < 0) {
+      experimentType = ExperimentType.AB;
+      patterns.push({
+        testId: es[0],
+        sectionName: undefined,
+        name: undefined,
+        number: +pattern, // to be number
+      })
+    } else {
+      experimentType = ExperimentType.MVT;
+      pattern.split('-').forEach((p) => {
+        patterns.push({
+          testId: es[0],
+          sectionName: undefined,
+          name: undefined,
+          number: +p, // to be number
+        })
+      })
+    }
     return {
       testId: es[0],
       name: "",
-      patterns: [
-        {
-          testId: es[0],
-          name: undefined,
-          number: +es[2], // to be number
-        },
-      ],
+      type: experimentType,
+      patterns: patterns,
       expire: +es[1], // to be number
       targetUrl: undefined,
       optimizeUrl: undefined,

@@ -11,6 +11,14 @@ export const ExperimentStatus = {
 };
 
 /**
+ * Experiment type.
+ */
+export const ExperimentType = {
+  AB: "AB",
+  MVT: "MVT",
+};
+
+/**
  * Extension icon status.
  */
 export const IconStatus = {

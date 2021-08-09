@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import { ExperimentStatus, ExperimentType } from "@/utils/constants";
 
-import { ExperimentStatus } from "@/utils/constants";
-
-import { ExperimentsTable } from "@/components/ExperimentsTable";
+import {
+  ExperimentsTable,
+  ExperimentPatternProps,
+} from "@/components/ExperimentsTable";
 import { Help } from "@/components/Help";
 import { Accordion } from "@/components/Accordion";
 
@@ -32,17 +34,6 @@ export default function PopupOptimize(props: any) {
 
   const [helpVisible, setHelpVisible] = useState(false);
 
-  function ExperimentPatterns(props: any) {
-    const patterns: ExperimentPattern[] = props.patterns;
-    return (
-      <ol className="patterns__list">
-        {patterns.map((p) => (
-          <li key={p.name || p.number}>{p.name}</li>
-        ))}
-      </ol>
-    );
-  }
-
   function toggleHelp() {
     setHelpVisible(!helpVisible);
   }
@@ -60,6 +51,52 @@ export default function PopupOptimize(props: any) {
           Log.d("clearStorage finished");
           window.close();
         }
+      );
+    }
+  }
+
+  /**
+   * ExperimentPatterns component
+   */
+  function ExperimentPatterns(props: ExperimentPatternProps) {
+    const patterns: ExperimentPattern[] = props.patterns;
+    const type = props.type;
+    if (type === ExperimentType.MVT) {
+      let sections = patterns.reduce((acc, cur) => {
+        let section = cur.sectionName;
+        if (!acc[section]) acc[section] = [];
+        acc[section].push({
+          key: cur.name || cur.number,
+          name: cur.name,
+        });
+        return acc;
+      }, {});
+
+      const sectionInners = Object.keys(sections).map((key) => {
+        let exps = sections[key];
+        return (
+          <li className="sections__list" key={key}>
+            <span className="sections__name">{key}</span>
+            <ol className="patterns">
+              {exps.map((p: any) => (
+                <li key={p.key}>{p.name}</li>
+              ))}
+            </ol>
+          </li>
+        );
+      });
+      return (
+        <ul className="sections">
+          {sectionInners.map((s) => s)}
+        </ul>
+      );
+    } else {
+      return (
+        <ol className="patterns">
+          {patterns.map((p) => (
+            <li key={p.name || p.number}>{p.name}</li>
+          ))}
+        </ol>
       );
     }
   }

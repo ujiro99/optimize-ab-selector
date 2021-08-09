@@ -1,5 +1,9 @@
 import React from "react";
-import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import {
+  Experiment,
+  ExperimentPattern,
+  ExperimentType,
+} from "@/@types/googleOptimize.d";
 
 /**
  * Name of experiment.
@@ -94,7 +98,12 @@ function TableBody(props: any) {
   for (const expe of experiments) {
     let selected = selectedPatterns.find((s) => s.testId === expe.testId);
     if (!selected) {
-      selected = { testId: undefined, name: undefined, number: undefined };
+      selected = {
+        testId: undefined,
+        sectionName: undefined,
+        name: undefined,
+        number: undefined,
+      };
     }
     tableBody.push(
       <tr key={expe.testId}>
@@ -109,6 +118,7 @@ function TableBody(props: any) {
         </td>
         <td className="table-body__pattern">
           <ExperimentPatterns
+            type={expe.type}
             patterns={expe.patterns}
             selected={selected.number}
             onChangePattern={onChangePattern}
@@ -127,6 +137,7 @@ function TableBody(props: any) {
  * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
  */
 export type ExperimentPatternProps = {
+  type: ExperimentType;
   patterns: ExperimentPattern[];
   selected: number;
   onChangePattern: (

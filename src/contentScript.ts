@@ -1,5 +1,5 @@
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/utils/constants";
+import { ExperimentStatus, ExperimentType } from "@/utils/constants";
 
 import Log from "@/services/log";
 
@@ -9,6 +9,7 @@ import Log from "@/services/log";
 function parse(): Experiment {
   const experiment: Experiment = {
     name: undefined,
+    type: undefined,
     testId: undefined,
     patterns: undefined,
     expire: undefined,
@@ -33,18 +34,45 @@ function parse(): Experiment {
     Log.d("name: " + experiment.name);
   }
 
-  // patterns
+  // patterns - A/B
   const patternDoms = document.querySelectorAll(".opt-variation-name");
   const patterns: ExperimentPattern[] = [];
   patternDoms.forEach((p, index) => {
     patterns.push({
       testId: experiment.testId,
+      sectionName: undefined,
       name: p.innerHTML.trim(),
       number: index,
     });
     Log.d("pattern name: " + p.innerHTML);
   });
   experiment.patterns = patterns;
+  experiment.type = ExperimentType.AB;
+
+  // patterns - MVT
+  if (patterns.length === 0) {
+    experiment.type = ExperimentType.MVT;
+
+    // parse sections
+    const mvtSections = document.querySelectorAll("opt-mvt-section");
+    mvtSections.forEach((mvt) => {
+      const sectionNameElm = mvt.querySelector(".opt-section-name");
+      const sectionName = sectionNameElm.innerHTML.trim();
+      Log.d("section name: " + sectionName);
+
+      // parse patterns
+      const mvtPatternElms = mvt.querySelectorAll('.opt-mvt-variation-name')
+      mvtPatternElms.forEach((p, index) => {
+        patterns.push({
+          testId: experiment.testId,
+          sectionName: sectionName,
+          name: p.innerHTML.trim(),
+          number: index,
+        });
+        Log.d("pattern name: " + p.innerHTML.trim());
+      })
+    })
+  }
 
   // targetUrl
   const targetDom: HTMLElement = document.querySelector(".opt-predicate-value");
