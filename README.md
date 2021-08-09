@@ -1,7 +1,6 @@
 # optimize-ab-selector
 
-This is a chrome extension, allows you to select a variants of A/B testing by the Google Optimize.
-
+This is a chrome extension, allows you to select variants of A/B testing by the Google Optimize.
 
 ## Usage
 

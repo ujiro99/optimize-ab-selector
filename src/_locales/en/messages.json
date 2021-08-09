@@ -1,7 +1,7 @@
 {
   "extName": { "message": "Optimize AB Selector" },
   "extDescription": {
-    "message": "This extension allows you to select a Google Optimize test pattern."
+    "message": "This extension allows you to select variants of A/B testing by the Google Optimize."
   },
   "btnApply": {
     "message": "Apply"
