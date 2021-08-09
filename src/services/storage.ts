@@ -1,4 +1,4 @@
-import Log from "@/log";
+import Log from "@/services/log";
 
 const Storage = {
   /**

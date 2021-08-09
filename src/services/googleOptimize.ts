@@ -1,7 +1,7 @@
 import { Experiment } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/constants";
-import Log from "@/log";
-import Cookie from "@/cookie";
+import { ExperimentStatus } from "@/utils/constants";
+import Log from "@/services/log";
+import Cookie from "@/services/cookie";
 
 /** Key name of Google Optimize cookie */
 const GO_COOKIE_KEY = "_gaexp";

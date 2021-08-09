@@ -1,5 +1,5 @@
-import { IconStatus } from "@/constants";
-import Log from "./log";
+import { IconStatus } from "@/utils/constants";
+import Log from "@/services/log";
 
 /**
  * Check if the experiments exists, and update the extension icon.

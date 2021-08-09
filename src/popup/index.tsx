@@ -1,8 +1,9 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import Tabs from "@/tabs";
 import Popup from "@/popup/Popup";
 import PopupOptimize from "@/popup/PopupOptimize";
+
+import Tabs from "@/services/tabs";
 
 async function initPopup() {
   const tab = await Tabs.getCurrentTab();

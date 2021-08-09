@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/constants";
+import { ExperimentStatus } from "@/utils/constants";
 import "@/popup/Popup.scss";
+
 import {
   ExperimentsTable,
   ExperimentPatternProps,
 } from "@/components/ExperimentsTable";
 import { Help } from "@/components/Help";
 import { Accordion } from "@/components/Accordion";
-import Tabs from "@/tabs";
-import Log from "@/log";
-import * as i18n from "@/i18n";
+
+import Tabs from "@/services/tabs";
+import Log from "@/services/log";
+import * as i18n from "@/services/i18n";
 
 /**
  * Patterns of experiment.

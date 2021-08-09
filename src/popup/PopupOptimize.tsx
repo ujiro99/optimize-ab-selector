@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/constants";
-import { equalsOptimizeUrl } from "@/googleOptimize";
+
+import { ExperimentStatus } from "@/utils/constants";
+
 import { ExperimentsTable } from "@/components/ExperimentsTable";
 import { Help } from "@/components/Help";
 import { Accordion } from "@/components/Accordion";
-import Log from "@/log";
-import * as i18n from "@/i18n";
+
+import { equalsOptimizeUrl } from "@/services/googleOptimize";
+import Log from "@/services/log";
+import * as i18n from "@/services/i18n";
 
 import "@/popup/Popup.scss";
 

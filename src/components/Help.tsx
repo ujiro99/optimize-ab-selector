@@ -1,7 +1,7 @@
 import React from "react";
 import "@/scss/help.scss";
 
-import * as i18n from "@/i18n";
+import * as i18n from "@/services/i18n";
 
 export function Help() {
   return (

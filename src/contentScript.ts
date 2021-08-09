@@ -1,7 +1,7 @@
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/constants";
+import { ExperimentStatus } from "@/utils/constants";
 
-import Log from "./log";
+import Log from "@/services/log";
 
 /**
  * Parse the DOM and extract Experiment information.
