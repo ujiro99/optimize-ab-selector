@@ -3,6 +3,7 @@ $primary-color: #505050;
 // Chrome applies an 8px margin by default (gross).
 body {
   margin: 0px;
+  color: $primary-color;
 }
 
 .popupContainer {
@@ -57,18 +58,19 @@ body {
     margin-right: 5px;
   }
 
-  &__test-id {
-    color: $primary-color;
-  }
-
   &__test-name {
     display: inline-block;
     width: 100%;
     margin-top: 4px;
+    font-size: 14px;
     text-decoration: inherit;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+
+  &__test-name + &__test-id {
+    font-size: 10px;
   }
 
   &__optimize-report {

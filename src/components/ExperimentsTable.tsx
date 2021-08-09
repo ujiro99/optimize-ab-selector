@@ -17,15 +17,15 @@ function ExperimentName(props: any) {
     <a
       className="experiments-table__optimize-url"
       href={experiment.optimizeUrl}
+      title="Open a experiment detail page."
       target="_blank"
     >
       {nameExists ? (
-        <span className="experiments-table__test-name" title={experiment.name}>
+        <span className="experiments-table__test-name">
           {experiment.name}
         </span>
-      ) : (
-        <span className="experiments-table__test-id">{experiment.testId}</span>
-      )}
+      ) : null}
+      <span className="experiments-table__test-id">{experiment.testId}</span>
     </a>
   );
 }
@@ -43,7 +43,7 @@ function ExperimentReport(props: any) {
       <a
         className="experiments-table__optimize-report"
         href={experiment.optimizeUrl + "/report"}
-        title={experiment.optimizeUrl + "/report"}
+        title="Open a experiment report page."
         target="_blank"
       >
         <svg className="icon icon-open-outline">
@@ -98,12 +98,14 @@ function TableBody(props: any) {
   for (const expe of experiments) {
     let selected = selectedPatterns.filter((s) => s.testId === expe.testId);
     if (selected.length === 0) {
-      selected = [{
-        testId: undefined,
-        sectionName: undefined,
-        name: undefined,
-        number: undefined,
-      }];
+      selected = [
+        {
+          testId: undefined,
+          sectionName: undefined,
+          name: undefined,
+          number: undefined,
+        },
+      ];
     }
     tableBody.push(
       <tr key={expe.testId}>
