@@ -21,76 +21,94 @@ const NameSeparator = "$$";
  * Patterns of experiment.
  */
 function ExperimentPatterns(props: ExperimentPatternProps) {
-  const patterns: ExperimentPattern[] = props.patterns;
-  const selected: ExperimentPattern[] = props.selected;
   const type = props.type;
   if (type === ExperimentType.AB) {
-    if (patterns.length > 1) {
-      const id = patterns[0].testId;
-      return (
+    return ExperimentPatternsAB(props);
+  } else if (type === ExperimentType.MVT) {
+    return ExperimentPatternsMVT(props)
+  } else {
+    Log.w("Pattern not found");
+    return <div></div>;
+  }
+}
+
+/**
+ * Patterns of experiment for A/B and Redirect.
+ */
+function ExperimentPatternsAB(props: ExperimentPatternProps) {
+  const patterns: ExperimentPattern[] = props.patterns;
+  const selected: ExperimentPattern[] = props.selected;
+  if (patterns.length > 1) {
+    const id = patterns[0].testId;
+    return (
+      <select
+        name={id}
+        value={selected[0].number}
+        className="experiments-table__select"
+        onChange={props.onChangePattern}
+      >
+        <option>----</option>
+        {patterns.map((p) => (
+          <option key={p.name || p.number} value={p.number}>
+            {p.name || p.number}
+          </option>
+        ))}
+      </select>
+    );
+  } else {
+    const expe = patterns[0];
+    return (
+      <input
+        name={expe.testId}
+        type="text"
+        value={expe.number}
+        onChange={props.onChangePattern}
+      />
+    );
+  }
+}
+
+/**
+ * Patterns of experiment for MVT.
+ */
+function ExperimentPatternsMVT(props: ExperimentPatternProps) {
+  const patterns: ExperimentPattern[] = props.patterns;
+  const selected: ExperimentPattern[] = props.selected;
+  const id = patterns[0].testId;
+
+  // group by sectionName
+  let sections = patterns.reduce((acc, cur) => {
+    let section = cur.sectionName;
+    if (!acc[section]) acc[section] = [];
+    acc[section].push(cur);
+    return acc;
+  }, {});
+
+  // create multiple select elements.
+  let selectList = Object.keys(sections).map((section, index) => {
+    const patternsInSection = sections[section];
+    const s = selected[index];
+    return (
+      <li key={section}>
+        <label className="experiments-table__section-label">{section}</label>
         <select
-          name={id}
-          value={selected[0].number}
+          name={id + NameSeparator + index}
+          value={s.number}
           className="experiments-table__select"
           onChange={props.onChangePattern}
         >
           <option>----</option>
-          {patterns.map((p) => (
+          {patternsInSection.map((p: ExperimentPattern) => (
             <option key={p.name || p.number} value={p.number}>
               {p.name || p.number}
             </option>
           ))}
         </select>
-      );
-    } else {
-      const expe = patterns[0];
-      return (
-        <input
-          name={expe.testId}
-          type="text"
-          value={expe.number}
-          onChange={props.onChangePattern}
-        />
-      );
-    }
-  } else if (type === ExperimentType.MVT) {
-    const id = patterns[0].testId;
+      </li>
+    );
+  });
 
-    // group by sectionName
-    let sections = patterns.reduce((acc, cur) => {
-      let section = cur.sectionName;
-      if (!acc[section]) acc[section] = [];
-      acc[section].push(cur);
-      return acc;
-    }, {});
-
-    let selectList = Object.keys(sections).map((section, index) => {
-      const patternsInSection = sections[section];
-      const s = selected[index];
-      return (
-        <li key={section}>
-          <label className="experiments-table__section-label">{section}</label>
-          <select
-            name={id + NameSeparator + index}
-            value={s.number}
-            className="experiments-table__select"
-            onChange={props.onChangePattern}
-          >
-            <option>----</option>
-            {patternsInSection.map((p: ExperimentPattern) => (
-              <option key={p.name || p.number} value={p.number}>
-                {p.name || p.number}
-              </option>
-            ))}
-          </select>
-        </li>
-      );
-    });
-    return <ul className="experiments-table__section">{selectList}</ul>;
-  } else {
-    Log.w("Pattern not found");
-    return <div></div>;
-  }
+  return <ul className="experiments-table__section">{selectList}</ul>;
 }
 
 export default function Popup(props: any) {
