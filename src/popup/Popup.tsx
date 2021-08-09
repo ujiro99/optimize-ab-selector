@@ -153,7 +153,8 @@ export default function Popup(props: any) {
     const sectionIndex = e.target.name.split(NameSeparator)[1];
     const patterns = copied.filter((p) => p.testId === testId);
     let pattern = patterns[0];
-    if (patterns.length > 0) {
+    if (patterns.length > 0 && sectionIndex) {
+      // This experiment is MVT
       pattern = patterns[sectionIndex];
     }
 
