@@ -62,6 +62,7 @@ export default function PopupOptimize(props: any) {
     const patterns: ExperimentPattern[] = props.patterns;
     const type = props.type;
     if (type === ExperimentType.MVT) {
+      // group by sectionName
       let sections = patterns.reduce((acc, cur) => {
         let section = cur.sectionName;
         if (!acc[section]) acc[section] = [];

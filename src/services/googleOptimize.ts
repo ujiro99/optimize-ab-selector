@@ -41,11 +41,13 @@ export async function list(url: string): Promise<Experiment[]> {
 /**
  * @typedef {Object} SwitchPattern
  * @param {string} testId Test id on Google Optimize.
- * @param {number} patternNumber Pattern No on Google Optimize.
+ * @param {string} sectionName Section name on Google Optimize.
+ * @param {number} patternNumber Pattern no on Google Optimize.
  */
 export type SwitchPattern = {
   testId: string;
-  patternNumber: number;
+  sectionName: string;
+  patternNumber: number | string;
 };
 
 /**
@@ -67,37 +69,40 @@ export async function switchPatterns(
   });
   const experiments = parseGaexp(value);
 
-  // update current patterns.
+  // For MVT, concat pattern numbers, group by testId and sectionName.
+  switchPatterns = switchPatterns.reduce((acc, cur) => {
+    const found = acc.find(
+      (a) => a.testId === cur.testId && a.sectionName === cur.sectionName
+    );
+    if (found) {
+      found.patternNumber += "-" + cur.patternNumber;
+    } else {
+      acc.push(cur);
+    }
+    return acc;
+  }, []);
+
+  // generate new patterns.
   let newExperiments = switchPatterns.map((sw) => {
     const target = experiments.find((exp) => exp.testId === sw.testId);
     if (target) {
-      target.patterns = [
-        {
-          testId: sw.testId,
-          sectionName: undefined,
-          name: undefined,
-          number: sw.patternNumber,
-        },
-      ];
-      return target;
+      return {
+        testId: sw.testId,
+        expire: target.expire,
+        patternNumber: sw.patternNumber,
+      };
     } else {
       return {
         testId: sw.testId,
         expire: 18926,
-        patterns: [
-          {
-            testId: sw.testId,
-            name: undefined,
-            number: sw.patternNumber,
-          },
-        ],
+        patternNumber: sw.patternNumber,
       };
     }
   });
 
   // Generate new cookie value.
   let generated = newExperiments
-    .map((exp) => `${exp.testId}.${exp.expire}.${exp.patterns[0].number}`)
+    .map((exp) => `${exp.testId}.${exp.expire}.${exp.patternNumber}`)
     .join("!");
   generated = GO_PREFIX + generated;
 
@@ -118,26 +123,25 @@ function parseGaexp(value: string): Experiment[] {
   return value.split("!").map((e) => {
     const es = e.split(".");
     const pattern = es[2];
-    let experimentType;
+    let experimentType = ExperimentType.AB;
     let patterns = [];
-    if (pattern.indexOf('-') < 0) {
-      experimentType = ExperimentType.AB;
+    if (pattern.indexOf("-") < 0) {
       patterns.push({
         testId: es[0],
         sectionName: undefined,
         name: undefined,
         number: +pattern, // to be number
-      })
+      });
     } else {
       experimentType = ExperimentType.MVT;
-      pattern.split('-').forEach((p) => {
+      pattern.split("-").forEach((p) => {
         patterns.push({
           testId: es[0],
           sectionName: undefined,
           name: undefined,
           number: +p, // to be number
-        })
-      })
+        });
+      });
     }
     return {
       testId: es[0],

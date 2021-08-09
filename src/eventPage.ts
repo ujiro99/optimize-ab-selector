@@ -47,6 +47,7 @@ const onMessageFuncs = {
     let switchPatterns: Optimize.SwitchPattern[] = patterns.map((p) => {
       return {
         testId: p.testId,
+        sectionName: p.sectionName,
         patternNumber: p.number,
       };
     });

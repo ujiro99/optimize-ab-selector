@@ -82,6 +82,11 @@ body {
     width: 300px - 1px;
   }
 
+  &__section {
+    margin: 0;
+    padding-left: 0;
+  }
+
   &__select {
     width: 100%;
   }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/utils/constants";
+import { ExperimentStatus, ExperimentType } from "@/utils/constants";
 import "@/popup/Popup.scss";
 
 import {
@@ -15,39 +15,78 @@ import Tabs from "@/services/tabs";
 import Log from "@/services/log";
 import * as i18n from "@/services/i18n";
 
+const NameSeparator = "$$";
+
 /**
  * Patterns of experiment.
  */
 function ExperimentPatterns(props: ExperimentPatternProps) {
   const patterns: ExperimentPattern[] = props.patterns;
-  const selected: number = props.selected;
-  if (patterns.length === 1) {
-    const expe = patterns[0];
-    return (
-      <input
-        name={expe.testId}
-        type="text"
-        value={expe.number}
-        onChange={props.onChangePattern}
-      />
-    );
-  } else if (patterns.length > 1) {
+  const selected: ExperimentPattern[] = props.selected;
+  const type = props.type;
+  if (type === ExperimentType.AB) {
+    if (patterns.length > 1) {
+      const id = patterns[0].testId;
+      return (
+        <select
+          name={id}
+          value={selected[0].number}
+          className="experiments-table__select"
+          onChange={props.onChangePattern}
+        >
+          <option>----</option>
+          {patterns.map((p) => (
+            <option key={p.name || p.number} value={p.number}>
+              {p.name || p.number}
+            </option>
+          ))}
+        </select>
+      );
+    } else {
+      const expe = patterns[0];
+      return (
+        <input
+          name={expe.testId}
+          type="text"
+          value={expe.number}
+          onChange={props.onChangePattern}
+        />
+      );
+    }
+  } else if (type === ExperimentType.MVT) {
     const id = patterns[0].testId;
-    return (
-      <select
-        name={id}
-        value={selected}
-        className="experiments-table__select"
-        onChange={props.onChangePattern}
-      >
-        <option>----</option>
-        {patterns.map((p) => (
-          <option key={p.name || p.number} value={p.number}>
-            {p.name || p.number}
-          </option>
-        ))}
-      </select>
-    );
+
+    // group by sectionName
+    let sections = patterns.reduce((acc, cur) => {
+      let section = cur.sectionName;
+      if (!acc[section]) acc[section] = [];
+      acc[section].push(cur);
+      return acc;
+    }, {});
+
+    let selectList = Object.keys(sections).map((section, index) => {
+      const patternsInSection = sections[section];
+      const s = selected[index];
+      return (
+        <li key={section}>
+          <label className="experiments-table__section-label">{section}</label>
+          <select
+            name={id + NameSeparator + index}
+            value={s.number}
+            className="experiments-table__select"
+            onChange={props.onChangePattern}
+          >
+            <option>----</option>
+            {patternsInSection.map((p: ExperimentPattern) => (
+              <option key={p.name || p.number} value={p.number}>
+                {p.name || p.number}
+              </option>
+            ))}
+          </select>
+        </li>
+      );
+    });
+    return <ul className="experiments-table__section">{selectList}</ul>;
   } else {
     Log.w("Pattern not found");
     return <div></div>;
@@ -75,7 +114,7 @@ export default function Popup(props: any) {
   Log.d(savedExperiments);
 
   const [selectedPatterns, setSelectedPatterns] = useState(
-    currentExperiments.map((c) => c.patterns[0])
+    currentExperiments.reduce((a, c) => a.concat(c.patterns), [])
   );
   Log.d(selectedPatterns);
 
@@ -110,7 +149,13 @@ export default function Popup(props: any) {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
     const copied: ExperimentPattern[] = Object.assign([], selectedPatterns);
-    const pattern = copied.find((p) => p.testId === e.target.name);
+    const testId = e.target.name.split(NameSeparator)[0];
+    const sectionIndex = e.target.name.split(NameSeparator)[1];
+    const patterns = copied.filter((p) => p.testId === testId);
+    let pattern = patterns[0];
+    if (patterns.length > 0) {
+      pattern = patterns[sectionIndex];
+    }
 
     let newVal: any;
     if (e.target instanceof HTMLSelectElement) {

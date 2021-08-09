@@ -96,14 +96,14 @@ function TableBody(props: any) {
   const onChangePattern: Function = props.changePattern;
   const tableBody = [];
   for (const expe of experiments) {
-    let selected = selectedPatterns.find((s) => s.testId === expe.testId);
-    if (!selected) {
-      selected = {
+    let selected = selectedPatterns.filter((s) => s.testId === expe.testId);
+    if (selected.length === 0) {
+      selected = [{
         testId: undefined,
         sectionName: undefined,
         name: undefined,
         number: undefined,
-      };
+      }];
     }
     tableBody.push(
       <tr key={expe.testId}>
@@ -120,7 +120,7 @@ function TableBody(props: any) {
           <ExperimentPatterns
             type={expe.type}
             patterns={expe.patterns}
-            selected={selected.number}
+            selected={selected}
             onChangePattern={onChangePattern}
           />
         </td>
@@ -133,13 +133,13 @@ function TableBody(props: any) {
 /**
  * @typedef ExperimentPatternProps
  * @param patterns {ExperimentPattern[]} Information of patterns of experiment.
- * @param selected {number} Pattern number.
+ * @param selected {ExperimentPattern[]} Selected patterns.
  * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
  */
 export type ExperimentPatternProps = {
   type: ExperimentType;
   patterns: ExperimentPattern[];
-  selected: number;
+  selected: ExperimentPattern[];
   onChangePattern: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
