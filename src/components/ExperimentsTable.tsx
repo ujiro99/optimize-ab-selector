@@ -86,51 +86,6 @@ function ExperimentTarget(props: any) {
   }
 }
 
-// Construct Google Optimize's information table.
-function TableBody({
-  url,
-  experiments,
-  patterns = [],
-  onChangePattern,
-  experimentPatterns,
-}: ExperimentsTableProps) {
-  const ExperimentPatterns = experimentPatterns;
-  const tableBody = [];
-  for (const expe of experiments) {
-    let selected = patterns.find((s) => s.testId === expe.testId);
-    if (!selected) {
-      selected = {
-        testId: undefined,
-        type: undefined,
-        expire: undefined,
-        pattern: undefined,
-      };
-    }
-    tableBody.push(
-      <tr key={expe.testId}>
-        <td className="table-body__name">
-          <ExperimentName experiment={expe} />
-        </td>
-        <td className="table-body__report">
-          <ExperimentReport experiment={expe} />
-        </td>
-        <td>
-          <ExperimentTarget experiment={expe} url={url} />
-        </td>
-        <td className="table-body__pattern">
-          <ExperimentPatterns
-            type={expe.type}
-            patterns={expe.patterns}
-            selected={selected}
-            onChangePattern={onChangePattern}
-          />
-        </td>
-      </tr>
-    );
-  }
-  return <tbody>{tableBody}</tbody>;
-}
-
 /**
  * @typedef ExperimentPatternProps
  * @param patterns {ExperimentPattern[]} Information of patterns of experiment.
@@ -175,10 +130,45 @@ type ExperimentsTableProps = {
 export function ExperimentsTable({
   url,
   experiments,
-  patterns,
+  patterns=[],
   onChangePattern,
   experimentPatterns,
 }: ExperimentsTableProps) {
+
+  const ExperimentPatterns = experimentPatterns;
+  const tableBody = [];
+  for (const expe of experiments) {
+    let selected = patterns.find((s) => s.testId === expe.testId);
+    if (!selected) {
+      selected = {
+        testId: undefined,
+        type: undefined,
+        expire: undefined,
+        pattern: undefined,
+      };
+    }
+    tableBody.push(
+      <tr key={expe.testId}>
+        <td className="table-body__name">
+          <ExperimentName experiment={expe} />
+        </td>
+        <td className="table-body__report">
+          <ExperimentReport experiment={expe} />
+        </td>
+        <td>
+          <ExperimentTarget experiment={expe} url={url} />
+        </td>
+        <td className="table-body__pattern">
+          <ExperimentPatterns
+            type={expe.type}
+            patterns={expe.patterns}
+            selected={selected}
+            onChangePattern={onChangePattern}
+          />
+        </td>
+      </tr>
+    );
+  }
   return (
     <table className="experiments-table">
       <thead>
@@ -189,13 +179,7 @@ export function ExperimentsTable({
           <th className="experiments-table__pattern">Pattern</th>
         </tr>
       </thead>
-      <TableBody
-        url={url}
-        experiments={experiments}
-        patterns={patterns}
-        onChangePattern={onChangePattern}
-        experimentPatterns={experimentPatterns}
-      />
+      <tbody>{tableBody}</tbody>
     </table>
   );
 }
