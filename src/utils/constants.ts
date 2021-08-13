@@ -1,7 +1,7 @@
 /**
  * Experiment status.
  */
-export const ExperimentStatus = {
+export const EXPERIMENT_STATUS = {
   None: "None",
   Running: "Running",
   Scheduled: "Scheduled",
@@ -13,7 +13,7 @@ export const ExperimentStatus = {
 /**
  * Experiment type.
  */
-export const ExperimentType = {
+export const EXPERIMENT_TYPE = {
   AB: "AB",
   MVT: "MVT",
 };
@@ -25,3 +25,8 @@ export const IconStatus = {
   Active: "Active",
   Unavailable: "Unavailable",
 };
+
+/**
+ * Default expire time.
+ */
+export const ExperimentExpireDefault = 18926;

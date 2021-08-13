@@ -4,8 +4,14 @@ import {
   Experiment,
   ExperimentPattern,
   ExperimentInCookie,
+  ExperimentType,
 } from "@/@types/googleOptimize.d";
-import { ExperimentStatus, ExperimentType } from "@/utils/constants";
+import * as EventPage from "@/@types/eventPage.d";
+import {
+  EXPERIMENT_STATUS,
+  EXPERIMENT_TYPE,
+  ExperimentExpireDefault,
+} from "@/utils/constants";
 import "@/popup/Popup.scss";
 
 import {
@@ -26,12 +32,12 @@ const NameSeparator = "$$";
  */
 function ExperimentPatterns(props: ExperimentPatternProps) {
   const type = props.type;
-  if (type === ExperimentType.AB) {
+  if (type === EXPERIMENT_TYPE.AB) {
     return ExperimentPatternsAB(props);
-  } else if (type === ExperimentType.MVT) {
+  } else if (type === EXPERIMENT_TYPE.MVT) {
     return ExperimentPatternsMVT(props);
   } else {
-    Log.w("Pattern not found");
+    Log.w("ExperimentType not defined: ", props);
     return <div></div>;
   }
 }
@@ -42,6 +48,10 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
 function ExperimentPatternsAB(props: ExperimentPatternProps) {
   const patterns = props.patterns;
   const selected = props.selected;
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => props.onChangePattern(e, EXPERIMENT_TYPE.AB);
+
   if (patterns.length > 1) {
     const id = patterns[0].testId;
     return (
@@ -49,7 +59,7 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
         name={id}
         value={selected[0].pattern}
         className="experiments-table__select"
-        onChange={props.onChangePattern}
+        onChange={onChange}
       >
         <option>----</option>
         {patterns.map((p) => (
@@ -67,7 +77,7 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
         name={expe.testId}
         type="text"
         value={expe.number}
-        onChange={props.onChangePattern}
+        onChange={onChange}
       />
     );
   }
@@ -80,6 +90,9 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
   const patterns = props.patterns;
   const inCookies = props.selected;
   const id = patterns[0].testId;
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => props.onChangePattern(e, EXPERIMENT_TYPE.MVT);
 
   let formList: JSX.Element[];
 
@@ -100,7 +113,7 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
     // create multiple select elements.
     formList = Object.keys(sections).map((section, index) => {
       const patternsInSection = sections[section];
-      const s = inCookies.pattern.split('-')[index];
+      const s = inCookies.pattern.split("-")[index];
 
       return (
         <li key={section}>
@@ -109,7 +122,7 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
             name={id + NameSeparator + index}
             value={s}
             className="experiments-table__select"
-            onChange={props.onChangePattern}
+            onChange={onChange}
           >
             <option>----</option>
             {patternsInSection.map((p: ExperimentPattern) => (
@@ -128,13 +141,13 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
     let numberList = patterns.map((pattern) => pattern.number);
     let joinedNumber = numberList.join("-");
     formList = [
-      <li>
+      <li key="---">
         <input
           name={id}
           type="text"
           value={joinedNumber}
           className="experiments-table__input"
-          onChange={props.onChangePattern}
+          onChange={onChange}
         />
       </li>,
     ];
@@ -169,14 +182,14 @@ export default function Popup(props: any) {
         targetUrl: undefined,
         optimizeUrl: undefined,
         editorPageUrl: undefined,
-        status: ExperimentStatus.Running,
+        status: EXPERIMENT_STATUS.Running,
       });
     }
   }
 
   // Narrow down to experiments that not finished.
   savedExperiments = savedExperiments.filter(
-    (e) => e.status === ExperimentStatus.Running
+    (e) => e.status === EXPERIMENT_STATUS.Running
   );
   Log.d(savedExperiments);
 
@@ -190,13 +203,16 @@ export default function Popup(props: any) {
    */
   function requestUpdate() {
     let parsed = new URL(url);
+
+    const params: EventPage.switchPatternsParam = {
+      url: parsed.origin,
+      patterns: selectedPatterns,
+    };
+
     chrome.runtime.sendMessage(
       {
         command: "switchPatterns",
-        parameter: {
-          url: parsed.origin,
-          patterns: selectedPatterns,
-        },
+        parameter: params,
       },
       () => {
         // Reload to reflect the changed cookie in the test.
@@ -211,35 +227,38 @@ export default function Popup(props: any) {
   }
 
   function changePattern(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    type: ExperimentType
   ) {
-    const copied = Object.assign([], selectedPatterns);
+    const copied: ExperimentInCookie[] = Object.assign([], selectedPatterns);
     const testId = e.target.name.split(NameSeparator)[0];
-    const sectionIndex = e.target.name.split(NameSeparator)[1];
-    const patterns = copied.filter((p) => p.testId === testId);
-    let pattern = patterns[0];
-    if (patterns.length > 0 && sectionIndex) {
-      // This experiment is MVT
-      pattern = patterns[sectionIndex];
-    }
+    const indexInSection = e.target.name.split(NameSeparator)[1];
+    const experiment = copied.find((p) => p.testId === testId);
 
     let newVal: any;
     if (e.target instanceof HTMLSelectElement) {
-      newVal = parseInt(e.target.value);
+      if (type === EXPERIMENT_TYPE.MVT) {
+        let patterns = experiment.pattern.split("-");
+        patterns[indexInSection] = e.target.value;
+        newVal = patterns.join("-");
+      }
     } else {
       newVal = e.target.value;
     }
 
-    if (pattern) {
-      pattern.number = newVal;
+    if (experiment) {
+      experiment.pattern = newVal;
     } else {
+      // This experiment isn't started yet.
       copied.push({
         testId: e.target.name,
-        sectionName: undefined,
-        name: undefined,
-        number: newVal,
+        type: type,
+        expire: ExperimentExpireDefault,
+        pattern: newVal,
       });
     }
+
+    Log.d(copied);
     setSelectedPatterns(copied);
   }
 

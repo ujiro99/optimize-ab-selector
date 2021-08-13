@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus, ExperimentType } from "@/utils/constants";
+import { EXPERIMENT_STATUS, EXPERIMENT_TYPE } from "@/utils/constants";
 
 import {
   ExperimentsTable,
@@ -20,13 +20,13 @@ export default function PopupOptimize(props: any) {
 
   const savedExperiments: Experiment[] = props.saved || [];
   const activeExperiments: Experiment[] = savedExperiments
-    .filter((s) => s.status === ExperimentStatus.Running)
+    .filter((s) => s.status === EXPERIMENT_STATUS.Running)
     .sort((a) => (equalsOptimizeUrl(url, a.optimizeUrl) ? -1 : 1));
   const finishedExperiments: Experiment[] = savedExperiments
     .filter(
       (s) =>
-        s.status === ExperimentStatus.Archived ||
-        s.status === ExperimentStatus.Ended
+        s.status === EXPERIMENT_STATUS.Archived ||
+        s.status === EXPERIMENT_STATUS.Ended
     )
     .sort((a) => (equalsOptimizeUrl(url, a.optimizeUrl) ? -1 : 1));
 
@@ -61,7 +61,7 @@ export default function PopupOptimize(props: any) {
   function ExperimentPatterns(props: ExperimentPatternProps) {
     const patterns: ExperimentPattern[] = props.patterns;
     const type = props.type;
-    if (type === ExperimentType.MVT) {
+    if (type === EXPERIMENT_TYPE.MVT) {
       // group by sectionName
       let sections = patterns.reduce((acc, cur) => {
         let section = cur.sectionName;

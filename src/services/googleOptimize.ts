@@ -1,5 +1,5 @@
 import { ExperimentInCookie } from "@/@types/googleOptimize.d";
-import { ExperimentType } from "@/utils/constants";
+import { EXPERIMENT_TYPE, ExperimentExpireDefault } from "@/utils/constants";
 import Log from "@/services/log";
 import Cookie from "@/services/cookie";
 
@@ -39,26 +39,14 @@ export async function list(url: string): Promise<ExperimentInCookie[]> {
 }
 
 /**
- * @typedef {Object} SwitchPattern
- * @param {string} testId Test id on Google Optimize.
- * @param {string} sectionName Section name on Google Optimize.
- * @param {number} patternNumber Pattern no on Google Optimize.
- */
-export type SwitchPattern = {
-  testId: string;
-  sectionName: string;
-  patternNumber: number | string;
-};
-
-/**
  * Switch a patterns of experiment.
  *
  * @param {string} url Target page url.
- * @param {SwitchPattern[]} switchPatterns New patterns.
+ * @param {ExperimentInCookie[]} switchPatterns New patterns.
  */
 export async function switchPatterns(
   url: string,
-  switchPatterns: SwitchPattern[]
+  switchPatterns: ExperimentInCookie[]
 ) {
   // Log.d(`set Pattern: ${url} ${testId} ${patternNumber}`);
 
@@ -69,40 +57,24 @@ export async function switchPatterns(
   });
   const experiments = parseGaexp(value);
 
-  // For MVT, concat pattern numbers, group by testId and sectionName.
-  switchPatterns = switchPatterns.reduce((acc, cur) => {
-    const found = acc.find(
-      (a) => a.testId === cur.testId && a.sectionName === cur.sectionName
-    );
-    if (found) {
-      found.patternNumber += "-" + cur.patternNumber;
-    } else {
-      acc.push(cur);
-    }
-    return acc;
-  }, []);
-
-  // generate new patterns.
-  let newExperiments = switchPatterns.map((sw) => {
+  // update experiments to new patterns.
+  switchPatterns.forEach((sw) => {
     const target = experiments.find((exp) => exp.testId === sw.testId);
     if (target) {
-      return {
-        testId: sw.testId,
-        expire: target.expire,
-        patternNumber: sw.patternNumber,
-      };
+      target.pattern = sw.pattern;
     } else {
-      return {
+      experiments.push({
         testId: sw.testId,
-        expire: 18926,
-        patternNumber: sw.patternNumber,
-      };
+        type: undefined,
+        expire: ExperimentExpireDefault,
+        pattern: sw.pattern,
+      });
     }
   });
 
   // Generate new cookie value.
-  let generated = newExperiments
-    .map((exp) => `${exp.testId}.${exp.expire}.${exp.patternNumber}`)
+  let generated =experiments 
+    .map((exp) => `${exp.testId}.${exp.expire}.${exp.pattern}`)
     .join("!");
   generated = GO_PREFIX + generated;
 
@@ -122,9 +94,9 @@ function parseGaexp(value: string): ExperimentInCookie[] {
   value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
-    let experimentType = ExperimentType.AB;
+    let experimentType = EXPERIMENT_TYPE.AB;
     if (es[2].indexOf("-") > 0) {
-      experimentType = ExperimentType.MVT;
+      experimentType = EXPERIMENT_TYPE.MVT;
     }
     return {
       testId: es[0],

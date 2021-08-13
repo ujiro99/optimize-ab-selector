@@ -142,7 +142,8 @@ export type ExperimentPatternProps = {
   patterns: ExperimentPattern[];
   selected: ExperimentInCookie;
   onChangePattern: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    type: ExperimentType
   ) => void;
 };
 
@@ -161,7 +162,8 @@ type ExperimentsTableProps = {
   experimentPatterns: React.VoidFunctionComponent<ExperimentPatternProps>;
   patterns?: ExperimentInCookie[];
   onChangePattern?: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    type: ExperimentType
   ) => void;
 };
 

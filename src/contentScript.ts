@@ -1,5 +1,5 @@
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { ExperimentStatus, ExperimentType } from "@/utils/constants";
+import { EXPERIMENT_STATUS, EXPERIMENT_TYPE } from "@/utils/constants";
 
 import Log from "@/services/log";
 
@@ -16,7 +16,7 @@ function parse(): Experiment {
     targetUrl: undefined,
     optimizeUrl: undefined,
     editorPageUrl: undefined,
-    status: ExperimentStatus.None,
+    status: EXPERIMENT_STATUS.None,
   };
 
   const idDom = document.querySelector(".opt-ga-tracking-id");
@@ -47,11 +47,11 @@ function parse(): Experiment {
     Log.d("pattern name: " + p.innerHTML);
   });
   experiment.patterns = patterns;
-  experiment.type = ExperimentType.AB;
+  experiment.type = EXPERIMENT_TYPE.AB;
 
   // patterns - MVT
   if (patterns.length === 0) {
-    experiment.type = ExperimentType.MVT;
+    experiment.type = EXPERIMENT_TYPE.MVT;
 
     // parse sections
     const mvtSections = document.querySelectorAll("opt-mvt-section");
@@ -95,11 +95,11 @@ function parse(): Experiment {
 
   // status
   const statusDefine = [
-    { status: ExperimentStatus.Ended, iconName: "ic_status_ended_white" },
-    { status: ExperimentStatus.Archived, iconName: "archive" },
-    { status: ExperimentStatus.Draft, iconName: "error_outline" },
-    { status: ExperimentStatus.Scheduled, iconName: "access_time" },
-    { status: ExperimentStatus.Running, iconName: "ic_status_running_white" },
+    { status: EXPERIMENT_STATUS.Ended, iconName: "ic_status_ended_white" },
+    { status: EXPERIMENT_STATUS.Archived, iconName: "archive" },
+    { status: EXPERIMENT_STATUS.Draft, iconName: "error_outline" },
+    { status: EXPERIMENT_STATUS.Scheduled, iconName: "access_time" },
+    { status: EXPERIMENT_STATUS.Running, iconName: "ic_status_running_white" },
   ];
 
   for (let i = 0; i < statusDefine.length; i++) {
