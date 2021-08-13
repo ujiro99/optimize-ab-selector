@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
-import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import {
+  Experiment,
+  ExperimentPattern,
+  ExperimentInCookie,
+} from "@/@types/googleOptimize.d";
 import { ExperimentStatus, ExperimentType } from "@/utils/constants";
 import "@/popup/Popup.scss";
 
@@ -25,7 +29,7 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
   if (type === ExperimentType.AB) {
     return ExperimentPatternsAB(props);
   } else if (type === ExperimentType.MVT) {
-    return ExperimentPatternsMVT(props)
+    return ExperimentPatternsMVT(props);
   } else {
     Log.w("Pattern not found");
     return <div></div>;
@@ -36,14 +40,14 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
  * Patterns of experiment for A/B and Redirect.
  */
 function ExperimentPatternsAB(props: ExperimentPatternProps) {
-  const patterns: ExperimentPattern[] = props.patterns;
-  const selected: ExperimentPattern[] = props.selected;
+  const patterns = props.patterns;
+  const selected = props.selected;
   if (patterns.length > 1) {
     const id = patterns[0].testId;
     return (
       <select
         name={id}
-        value={selected[0].number}
+        value={selected[0].pattern}
         className="experiments-table__select"
         onChange={props.onChangePattern}
       >
@@ -56,6 +60,7 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
       </select>
     );
   } else {
+    // This experiment isn't parsed on the Google Optimize experiment page.
     const expe = patterns[0];
     return (
       <input
@@ -72,56 +77,100 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
  * Patterns of experiment for MVT.
  */
 function ExperimentPatternsMVT(props: ExperimentPatternProps) {
-  const patterns: ExperimentPattern[] = props.patterns;
-  const selected: ExperimentPattern[] = props.selected;
+  const patterns = props.patterns;
+  const inCookies = props.selected;
   const id = patterns[0].testId;
 
-  // group by sectionName
-  let sections = patterns.reduce((acc, cur) => {
-    let section = cur.sectionName;
-    if (!acc[section]) acc[section] = [];
-    acc[section].push(cur);
-    return acc;
-  }, {});
+  let formList: JSX.Element[];
 
-  // create multiple select elements.
-  let selectList = Object.keys(sections).map((section, index) => {
-    const patternsInSection = sections[section];
-    const s = selected[index];
-    return (
-      <li key={section}>
-        <label className="experiments-table__section-label">{section}</label>
-        <select
-          name={id + NameSeparator + index}
-          value={s.number}
-          className="experiments-table__select"
+  Log.d(patterns);
+  Log.d(inCookies);
+
+  if (patterns[0].sectionName) {
+    // This experiment is parsed.
+
+    // group by sectionName
+    let sections = patterns.reduce((acc, cur) => {
+      let section = cur.sectionName;
+      if (!acc[section]) acc[section] = [];
+      acc[section].push(cur);
+      return acc;
+    }, {});
+
+    // create multiple select elements.
+    formList = Object.keys(sections).map((section, index) => {
+      const patternsInSection = sections[section];
+      const s = inCookies.pattern.split('-')[index];
+
+      return (
+        <li key={section}>
+          <label className="experiments-table__section-label">{section}</label>
+          <select
+            name={id + NameSeparator + index}
+            value={s}
+            className="experiments-table__select"
+            onChange={props.onChangePattern}
+          >
+            <option>----</option>
+            {patternsInSection.map((p: ExperimentPattern) => (
+              <option key={p.name || p.number} value={p.number}>
+                {p.name || p.number}
+              </option>
+            ))}
+          </select>
+        </li>
+      );
+    });
+  } else {
+    // This experiment isn't parsed on the Google Optimize experiment page.
+
+    // create input elements.
+    let numberList = patterns.map((pattern) => pattern.number);
+    let joinedNumber = numberList.join("-");
+    formList = [
+      <li>
+        <input
+          name={id}
+          type="text"
+          value={joinedNumber}
+          className="experiments-table__input"
           onChange={props.onChangePattern}
-        >
-          <option>----</option>
-          {patternsInSection.map((p: ExperimentPattern) => (
-            <option key={p.name || p.number} value={p.number}>
-              {p.name || p.number}
-            </option>
-          ))}
-        </select>
-      </li>
-    );
-  });
+        />
+      </li>,
+    ];
+  }
 
-  return <ul className="experiments-table__section">{selectList}</ul>;
+  return <ul className="experiments-table__section">{formList}</ul>;
 }
 
 export default function Popup(props: any) {
   const url = props.url;
   const tabId = props.tabId;
-  const currentExperiments: Experiment[] = props.current || [];
+  const experimentInCookie: ExperimentInCookie[] = props.current || [];
   let savedExperiments: Experiment[] = props.saved || [];
 
   // Merge experiments found in cookies
-  for (const expe of currentExperiments) {
+  for (const expe of experimentInCookie) {
     const found = savedExperiments.find((a) => a.testId === expe.testId);
     if (found == null) {
-      savedExperiments.push(expe);
+      savedExperiments.push({
+        testId: expe.testId,
+        type: expe.type,
+        name: undefined,
+        patterns: [
+          {
+            testId: expe.testId,
+            sectionName: undefined,
+            name: undefined,
+            number: expe.pattern,
+          },
+        ],
+        expire: expe.expire,
+        targetUrl: undefined,
+        optimizeUrl: undefined,
+        editorPageUrl: undefined,
+        status: ExperimentStatus.Running,
+      });
     }
   }
 
@@ -131,9 +180,7 @@ export default function Popup(props: any) {
   );
   Log.d(savedExperiments);
 
-  const [selectedPatterns, setSelectedPatterns] = useState(
-    currentExperiments.reduce((a, c) => a.concat(c.patterns), [])
-  );
+  const [selectedPatterns, setSelectedPatterns] = useState(experimentInCookie);
   Log.d(selectedPatterns);
 
   const [helpVisible, setHelpVisible] = useState(false);
@@ -166,7 +213,7 @@ export default function Popup(props: any) {
   function changePattern(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
-    const copied: ExperimentPattern[] = Object.assign([], selectedPatterns);
+    const copied = Object.assign([], selectedPatterns);
     const testId = e.target.name.split(NameSeparator)[0];
     const sectionIndex = e.target.name.split(NameSeparator)[1];
     const patterns = copied.filter((p) => p.testId === testId);

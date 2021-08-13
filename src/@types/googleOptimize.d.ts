@@ -1,14 +1,14 @@
 import { ExperimentStatus, ExperimentType } from "@/utils/constants";
 
 /**
- * Information of an experiment
+ * Information of an experiment.
  */
 interface Experiment {
   testId: string;
-  type: ExperimentType,
-  name: string;
-  patterns: ExperimentPattern[];
+  type: ExperimentType;
   expire: number;
+  patterns: ExperimentPattern[];
+  name: string;
   targetUrl: string;
   optimizeUrl: string;
   editorPageUrl: string;
@@ -16,13 +16,23 @@ interface Experiment {
 }
 
 /**
- * Information of an pattern of experiment
+ * Information of an pattern of experiment.
  */
 interface ExperimentPattern {
   testId: string;
   sectionName: string;
   name: string;
-  number: number;
+  number: number | string;
+}
+
+/**
+ * Information of an experiment in the cookie.
+ */
+interface ExperimentInCookie {
+  testId: string;
+  type: ExperimentType;
+  expire: number;
+  pattern: string;
 }
 
 /**
@@ -33,4 +43,4 @@ type ExperimentStatus = typeof ExperimentStatus[keyof typeof ExperimentStatus];
 /**
  * Experiment type type.
  */
-type ExperimentType = typeof ExperimentType[keyof typeof ExperimentType]
+type ExperimentType = typeof ExperimentType[keyof typeof ExperimentType];

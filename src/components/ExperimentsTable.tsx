@@ -3,6 +3,7 @@ import {
   Experiment,
   ExperimentPattern,
   ExperimentType,
+  ExperimentInCookie,
 } from "@/@types/googleOptimize.d";
 
 /**
@@ -21,9 +22,7 @@ function ExperimentName(props: any) {
       target="_blank"
     >
       {nameExists ? (
-        <span className="experiments-table__test-name">
-          {experiment.name}
-        </span>
+        <span className="experiments-table__test-name">{experiment.name}</span>
       ) : null}
       <span className="experiments-table__test-id">{experiment.testId}</span>
     </a>
@@ -88,24 +87,24 @@ function ExperimentTarget(props: any) {
 }
 
 // Construct Google Optimize's information table.
-function TableBody(props: any) {
-  const experiments: Experiment[] = props.experiments || [];
-  const selectedPatterns: ExperimentPattern[] = props.patterns || [];
-  const url: string = props.url;
-  const ExperimentPatterns = props.experimentPatternsComponent;
-  const onChangePattern: Function = props.changePattern;
+function TableBody({
+  url,
+  experiments,
+  patterns = [],
+  onChangePattern,
+  experimentPatterns,
+}: ExperimentsTableProps) {
+  const ExperimentPatterns = experimentPatterns;
   const tableBody = [];
   for (const expe of experiments) {
-    let selected = selectedPatterns.filter((s) => s.testId === expe.testId);
-    if (selected.length === 0) {
-      selected = [
-        {
-          testId: undefined,
-          sectionName: undefined,
-          name: undefined,
-          number: undefined,
-        },
-      ];
+    let selected = patterns.find((s) => s.testId === expe.testId);
+    if (!selected) {
+      selected = {
+        testId: undefined,
+        type: undefined,
+        expire: undefined,
+        pattern: undefined,
+      };
     }
     tableBody.push(
       <tr key={expe.testId}>
@@ -141,7 +140,7 @@ function TableBody(props: any) {
 export type ExperimentPatternProps = {
   type: ExperimentType;
   patterns: ExperimentPattern[];
-  selected: ExperimentPattern[];
+  selected: ExperimentInCookie;
   onChangePattern: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
@@ -160,7 +159,7 @@ type ExperimentsTableProps = {
   url: string;
   experiments: Experiment[];
   experimentPatterns: React.VoidFunctionComponent<ExperimentPatternProps>;
-  patterns?: ExperimentPattern[];
+  patterns?: ExperimentInCookie[];
   onChangePattern?: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
@@ -192,8 +191,8 @@ export function ExperimentsTable({
         url={url}
         experiments={experiments}
         patterns={patterns}
-        changePattern={onChangePattern}
-        experimentPatternsComponent={experimentPatterns}
+        onChangePattern={onChangePattern}
+        experimentPatterns={experimentPatterns}
       />
     </table>
   );

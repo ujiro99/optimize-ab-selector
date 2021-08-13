@@ -1,5 +1,5 @@
-import { Experiment } from "@/@types/googleOptimize.d";
-import { ExperimentStatus, ExperimentType } from "@/utils/constants";
+import { ExperimentInCookie } from "@/@types/googleOptimize.d";
+import { ExperimentType } from "@/utils/constants";
 import Log from "@/services/log";
 import Cookie from "@/services/cookie";
 
@@ -15,7 +15,7 @@ const GO_PREFIX = "GAX1.2.";
  * @param {string} url Target page url.
  * @returns {Promise<Experiment[]>}
  */
-export async function list(url: string): Promise<Experiment[]> {
+export async function list(url: string): Promise<ExperimentInCookie[]> {
   const cookie = await Cookie.get({
     url: url,
     name: GO_COOKIE_KEY,
@@ -28,7 +28,7 @@ export async function list(url: string): Promise<Experiment[]> {
 
   const experiments = parseGaexp(cookie.value);
   for (const expe of experiments) {
-    Log.d(`id: ${expe.testId}, pattern: ${expe.patterns[0].number}`);
+    Log.d(`id: ${expe.testId}, pattern: ${expe.pattern}`);
   }
 
   // if (typeof dataLayer !== "undefined") {
@@ -118,41 +118,19 @@ export async function switchPatterns(
 /**
  * Parse a value of _gaexp on cookie.
  */
-function parseGaexp(value: string): Experiment[] {
+function parseGaexp(value: string): ExperimentInCookie[] {
   value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
-    const pattern = es[2];
     let experimentType = ExperimentType.AB;
-    let patterns = [];
-    if (pattern.indexOf("-") < 0) {
-      patterns.push({
-        testId: es[0],
-        sectionName: undefined,
-        name: undefined,
-        number: +pattern, // to be number
-      });
-    } else {
+    if (es[2].indexOf("-") > 0) {
       experimentType = ExperimentType.MVT;
-      pattern.split("-").forEach((p) => {
-        patterns.push({
-          testId: es[0],
-          sectionName: undefined,
-          name: undefined,
-          number: +p, // to be number
-        });
-      });
     }
     return {
       testId: es[0],
-      name: "",
-      type: experimentType,
-      patterns: patterns,
       expire: +es[1], // to be number
-      targetUrl: undefined,
-      optimizeUrl: undefined,
-      editorPageUrl: undefined,
-      status: ExperimentStatus.Running,
+      pattern: es[2],
+      type: experimentType,
     };
   });
 }
