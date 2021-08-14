@@ -1,4 +1,5 @@
-import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
+import { Experiment, ExperimentInCookie } from "@/@types/googleOptimize.d";
+import * as EventPage from "@/@types/eventPage.d";
 import { IconStatus } from "@/utils/constants";
 
 import Log from "@/services/log";
@@ -41,15 +42,9 @@ const onMessageFuncs = {
   /**
    * Switch a pattern of experiment.
    */
-  switchPatterns(param: any, sendResponse: Function) {
+  switchPatterns(param: EventPage.switchPatternsParam, sendResponse: Function) {
     const url = param.url;
-    const patterns: ExperimentPattern[] = param.patterns;
-    let switchPatterns: Optimize.SwitchPattern[] = patterns.map((p) => {
-      return {
-        testId: p.testId,
-        patternNumber: p.number,
-      };
-    });
+    const switchPatterns: ExperimentInCookie[] = param.patterns;
 
     Optimize.switchPatterns(url, switchPatterns).then(() => {
       sendResponse(true);

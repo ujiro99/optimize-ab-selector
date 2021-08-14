@@ -1,5 +1,5 @@
-import { Experiment } from "@/@types/googleOptimize.d";
-import { ExperimentStatus } from "@/utils/constants";
+import { ExperimentInCookie } from "@/@types/googleOptimize.d";
+import { EXPERIMENT_TYPE, ExperimentExpireDefault } from "@/utils/constants";
 import Log from "@/services/log";
 import Cookie from "@/services/cookie";
 
@@ -15,7 +15,7 @@ const GO_PREFIX = "GAX1.2.";
  * @param {string} url Target page url.
  * @returns {Promise<Experiment[]>}
  */
-export async function list(url: string): Promise<Experiment[]> {
+export async function list(url: string): Promise<ExperimentInCookie[]> {
   const cookie = await Cookie.get({
     url: url,
     name: GO_COOKIE_KEY,
@@ -28,7 +28,7 @@ export async function list(url: string): Promise<Experiment[]> {
 
   const experiments = parseGaexp(cookie.value);
   for (const expe of experiments) {
-    Log.d(`id: ${expe.testId}, pattern: ${expe.patterns[0].number}`);
+    Log.d(`id: ${expe.testId}, pattern: ${expe.pattern}`);
   }
 
   // if (typeof dataLayer !== "undefined") {
@@ -39,24 +39,14 @@ export async function list(url: string): Promise<Experiment[]> {
 }
 
 /**
- * @typedef {Object} SwitchPattern
- * @param {string} testId Test id on Google Optimize.
- * @param {number} patternNumber Pattern No on Google Optimize.
- */
-export type SwitchPattern = {
-  testId: string;
-  patternNumber: number;
-};
-
-/**
  * Switch a patterns of experiment.
  *
  * @param {string} url Target page url.
- * @param {SwitchPattern[]} switchPatterns New patterns.
+ * @param {ExperimentInCookie[]} switchPatterns New patterns.
  */
 export async function switchPatterns(
   url: string,
-  switchPatterns: SwitchPattern[]
+  switchPatterns: ExperimentInCookie[]
 ) {
   // Log.d(`set Pattern: ${url} ${testId} ${patternNumber}`);
 
@@ -67,36 +57,24 @@ export async function switchPatterns(
   });
   const experiments = parseGaexp(value);
 
-  // update current patterns.
-  let newExperiments = switchPatterns.map((sw) => {
+  // update experiments to new patterns.
+  switchPatterns.forEach((sw) => {
     const target = experiments.find((exp) => exp.testId === sw.testId);
     if (target) {
-      target.patterns = [
-        {
-          testId: sw.testId,
-          name: undefined,
-          number: sw.patternNumber,
-        },
-      ];
-      return target;
+      target.pattern = sw.pattern;
     } else {
-      return {
+      experiments.push({
         testId: sw.testId,
-        expire: 18926,
-        patterns: [
-          {
-            testId: sw.testId,
-            name: undefined,
-            number: sw.patternNumber,
-          },
-        ],
-      };
+        type: undefined,
+        expire: ExperimentExpireDefault,
+        pattern: sw.pattern,
+      });
     }
   });
 
   // Generate new cookie value.
-  let generated = newExperiments
-    .map((exp) => `${exp.testId}.${exp.expire}.${exp.patterns[0].number}`)
+  let generated =experiments 
+    .map((exp) => `${exp.testId}.${exp.expire}.${exp.pattern}`)
     .join("!");
   generated = GO_PREFIX + generated;
 
@@ -112,25 +90,19 @@ export async function switchPatterns(
 /**
  * Parse a value of _gaexp on cookie.
  */
-function parseGaexp(value: string): Experiment[] {
+function parseGaexp(value: string): ExperimentInCookie[] {
   value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
+    let experimentType = EXPERIMENT_TYPE.AB;
+    if (es[2].indexOf("-") > 0) {
+      experimentType = EXPERIMENT_TYPE.MVT;
+    }
     return {
       testId: es[0],
-      name: "",
-      patterns: [
-        {
-          testId: es[0],
-          name: undefined,
-          number: +es[2], // to be number
-        },
-      ],
       expire: +es[1], // to be number
-      targetUrl: undefined,
-      optimizeUrl: undefined,
-      editorPageUrl: undefined,
-      status: ExperimentStatus.Running,
+      pattern: es[2],
+      type: experimentType,
     };
   });
 }

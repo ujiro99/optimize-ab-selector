@@ -1,5 +1,5 @@
 {
-  "extName": { "message": "Optimize AB Selector" },
+  "extName": { "message": "Google Optimize AB Selector" },
   "extDescription": {
     "message": "Googleオプティマイズのテストパターンを選択できるようにします。"
   },
@@ -25,12 +25,24 @@
     "message": "初めに、GoogleOptimizeのテストを表示するページで、「詳細」タブを開きます｡"
   },
   "helpStep2": {
-    "message": "Optimize AB Selectorは表示されている内容からテストの設定値を読み取ります。 読み取りが正常に完了すると、Optimize AB Selectorのアイコンに\"!\"マークが表示されます。"
+    "message": "Google Optimize AB Selectorは表示されている内容からテストの設定値を読み取ります。 読み取りが正常に完了すると、Google Optimize AB Selectorのアイコンに\"!\"マークが表示されます。"
   },
   "helpStep3": {
-    "message": "Optimize AB Selectorのアイコンをクリックすると、読み取られた設定値が表示されます。 Editor PageのURLをクリックすると、テストを実行しているページを開きます。"
+    "message": "Google Optimize AB Selectorのアイコンをクリックすると、読み取られた設定値が表示されます。 Editor PageのURLをクリックすると、テストを実行しているページを開きます。"
   },
   "helpStep4": {
     "message": "テストページではパターンの変更が行えます。 変更したいテストを選択し、適用ボタンをクリックしてください。"
+  },
+  "columnNameName": {
+    "message": "エクスペリエンス名"
+  },
+  "columnNameReport": {
+    "message": "レポート"
+  },
+  "columnNameEditor": {
+    "message": "エディタページ"
+  },
+  "columnNamePattern": {
+    "message": "パターン"
   }
 }

@@ -3,6 +3,7 @@ $primary-color: #505050;
 // Chrome applies an 8px margin by default (gross).
 body {
   margin: 0px;
+  color: $primary-color;
 }
 
 .popupContainer {
@@ -57,18 +58,19 @@ body {
     margin-right: 5px;
   }
 
-  &__test-id {
-    color: $primary-color;
-  }
-
   &__test-name {
     display: inline-block;
     width: 100%;
     margin-top: 4px;
+    font-size: 14px;
     text-decoration: inherit;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+  }
+
+  &__test-name + &__test-id {
+    font-size: 10px;
   }
 
   &__optimize-report {
@@ -80,6 +82,11 @@ body {
 
   &__name {
     width: 300px - 1px;
+  }
+
+  &__section {
+    margin: 0;
+    padding-left: 0;
   }
 
   &__select {
@@ -113,7 +120,7 @@ body {
 
   &__close {
     display: block;
-    margin: 8px auto;
+    margin: 16px auto;
   }
 }
 
@@ -137,11 +144,19 @@ td.table-body__pattern {
   margin-top: 10px;
 }
 
+.sections {
+  margin: 0;
+  padding: 0 0 0 20px;
+  list-style: upper-alpha;
+}
+
 .patterns {
-  &__list {
-    padding: 0 0 0 20px;
-    margin: 0;
-  }
+  padding: 0 0 0 20px;
+  margin: 0;
+}
+
+.sections .patterns {
+  padding-left: 10px;
 }
 
 .icon {
