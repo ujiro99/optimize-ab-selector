@@ -1,20 +1,22 @@
-/**
- * ログ用モジュールからのデバッグログ出力有無を切り替えるログ。
- * true: 出力する | false: 出力しない
- */
-const isDebug = true;
+const environment = process.env.NODE_ENV || 'development';
 
 /**
- * ログ用モジュール
- * console.logは使わずにコチラを使ってください。
+ * Setting value to switch the debug log output from this module.
+ *
+ * true: enables all log. | false: disables debug log.
+ */
+const isDebug = environment === "development";
+
+/**
+ * Log module.
  */
 const Log = {
   /**
-   * デバッグレベルのログを出力する
+   * Output debug level log.
    */
   d: isDebug ? console.log : function() {},
   /**
-   * 警告レベルのログを出力する
+   * Output warning level log.
    */
   w: console.warn.bind(console)
 };
