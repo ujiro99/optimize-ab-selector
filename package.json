@@ -9,7 +9,7 @@
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
     "watch": "webpack -w --config webpack.dev.js",
-    "zip": "zip -r build.zip dist"
+    "zip": "rm build.zip; find . -name \".DS_Store\" -delete; cd dist; zip -r ../build.zip ./"
   },
   "author": "Yujiro Takeda",
   "license": "MIT",
