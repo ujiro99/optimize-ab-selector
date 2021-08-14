@@ -1,6 +1,6 @@
 {
   "name": "optimize-ab-selector",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
   "engines": {
     "node": "14.x"
@@ -9,7 +9,9 @@
     "build": "webpack --config webpack.prod.js",
     "dev": "webpack --config webpack.dev.js",
     "watch": "webpack -w --config webpack.dev.js",
-    "zip": "zip -r build.zip dist"
+    "zip": "find . -name \".DS_Store\" -delete; cd dist; zip -r ../build/build-$(node -p -e \"require('../package.json').version\").zip ./",
+    "bump": "mversion p -m",
+    "bump:i": "mversion i -m"
   },
   "author": "Yujiro Takeda",
   "license": "MIT",
@@ -18,9 +20,11 @@
     "@types/react": "^16.14.11",
     "@types/react-dom": "^16.9.14",
     "css-loader": "^3.6.0",
+    "mversion": "^2.0.1",
     "node-sass": "^6.0.1",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
+    "terser-webpack-plugin": "^5.1.4",
     "ts-loader": "^4.0.1",
     "typescript": "^3.9.10",
     "webpack": "^5.47.1",

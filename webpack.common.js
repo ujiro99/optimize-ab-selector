@@ -48,9 +48,8 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: "src/_locales", to: "dist/_locales" },
-        { from: "src/img", to: "dist/img" },
-        { from: "src/manifest.json", to: "dist/manifest.json" },
+        { from: "manifest.json", to: "dist/manifest.json" },
+        { from: "public", to: "dist/" },
         { from: "src/popup.html", to: "dist/popup.html" },
       ],
     }),
