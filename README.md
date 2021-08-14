@@ -6,24 +6,16 @@ This is a chrome extension, allows you to select variants of A/B testing by the 
 https://chrome.google.com/webstore/detail/optimize-ab-selector/beokjaefopekfpjfejcdecdeoebeebbb
 
 ## Usage
+[docs/usage](docs/usage.md)
 
-1. First, open the "Details" tab on the the Google Optimize page displaying a experient.  
-![open detail page](public/img/help/optimize_open.png)
+## Support
+If you feel the Optimize AB Selector is useful and you want to support the author, Let's try this!🌟
 
-2. The Optimize AB Selector parse the test configuration from this page. When the parsing is completed successfully, the Optimize AB Selector icon will display a "!" mark.  
-![extension icon](public/img/help/extension_icon_found.png)
-
-3. Click the Optimize AB Selector icon to display a parsed test configuration. Click a URL on the Editor Page to open a page where you are running a test.  
-![open editor page](public/img/help/extension_experiment_page.png)
-
-4. You can change a pattern on the test page. Select a pattern you want to change and click the Apply button.  
-![Apply pattern](public/img/help/extension_editor_page.png)
-
+<a href="https://www.buymeacoffee.com/yujiro.takeda"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=yujiro.takeda&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"></a>
 
 ## Terms
 - [Terms and conditions](docs/terms-and-conditions.md)
 - [Privacy policy](docs/privacy-policy.md)
-
 
 ## License
 MIT
