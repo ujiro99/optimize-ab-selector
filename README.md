@@ -2,6 +2,9 @@
 
 This is a chrome extension, allows you to select variants of A/B testing by the Google Optimize.
 
+## Install
+https://chrome.google.com/webstore/detail/optimize-ab-selector/beokjaefopekfpjfejcdecdeoebeebbb
+
 ## Usage
 
 1. First, open the "Details" tab on the the Google Optimize page displaying a experient.  
