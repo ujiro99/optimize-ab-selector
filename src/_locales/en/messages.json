@@ -1,5 +1,5 @@
 {
-  "extName": { "message": "Optimize AB Selector" },
+  "extName": { "message": "Google Optimize AB Selector" },
   "extDescription": {
     "message": "This extension allows you to select variants of A/B testing by the Google Optimize."
   },
@@ -16,21 +16,33 @@
     "message": "Clear"
   },
   "labelClear": {
-    "message": "Are you sure you want to clear all saved Experiments?"
+    "message": "Are you sure you want to clear all saved Experiences?"
   },
   "helpTitle": {
     "message": "Usage"
   },
   "helpStep1": {
-    "message": "First, open the \"Details\" tab on the the Google Optimize page displaying a experient."
+    "message": "First, open the \"Details\" tab on the the Google Optimize page displaying a experience."
   },
   "helpStep2": {
-    "message": "The Optimize AB Selector parse the test configuration from this page. When the parsing is completed successfully, the Optimize AB Selector icon will display a \"!\" mark."
+    "message": "The Google Optimize AB Selector parse the test configuration from this page. When the parsing is completed successfully, the Google Optimize AB Selector icon will display a \"!\" mark."
   },
   "helpStep3": {
-    "message": "Click the Optimize AB Selector icon to display a parsed test configuration. Click a URL on the Editor Page to open a page where you are running a test."
+    "message": "Click the Google Optimize AB Selector icon to display a parsed test configuration. Click a URL on the Editor Page to open a page where you are running a test."
   },
   "helpStep4": {
     "message": "You can change a pattern on the test page. Select a pattern you want to change and click the Apply button."
+  },
+  "columnNameName": {
+    "message": "Experience Name"
+  },
+  "columnNameReport": {
+    "message": "Report"
+  },
+  "columnNameEditor": {
+    "message": "Editor Page"
+  },
+  "columnNamePattern": {
+    "message": "Variant"
   }
 }

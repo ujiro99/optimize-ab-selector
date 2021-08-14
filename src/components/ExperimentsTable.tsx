@@ -5,6 +5,7 @@ import {
   ExperimentType,
   ExperimentInCookie,
 } from "@/@types/googleOptimize.d";
+import * as i18n from "@/services/i18n";
 
 /**
  * Name of experiment.
@@ -18,7 +19,7 @@ function ExperimentName(props: any) {
     <a
       className="experiments-table__optimize-url"
       href={experiment.optimizeUrl}
-      title="Open a experiment detail page."
+      title="Open a experience detail page."
       target="_blank"
     >
       {nameExists ? (
@@ -42,7 +43,7 @@ function ExperimentReport(props: any) {
       <a
         className="experiments-table__optimize-report"
         href={experiment.optimizeUrl + "/report"}
-        title="Open a experiment report page."
+        title="Open a experience report page."
         target="_blank"
       >
         <svg className="icon icon-open-outline">
@@ -173,10 +174,10 @@ export function ExperimentsTable({
     <table className="experiments-table">
       <thead>
         <tr>
-          <th className="experiments-table__name">Name</th>
-          <th className="experiments-table__report">Report</th>
-          <th className="experiments-table__target-url">Editor Page</th>
-          <th className="experiments-table__pattern">Pattern</th>
+          <th className="experiments-table__name">{i18n.t("columnNameName")}</th>
+          <th className="experiments-table__report">{i18n.t("columnNameReport")}</th>
+          <th className="experiments-table__target-url">{i18n.t("columnNameEditor")}</th>
+          <th className="experiments-table__pattern">{i18n.t("columnNamePattern")}</th>
         </tr>
       </thead>
       <tbody>{tableBody}</tbody>
