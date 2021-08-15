@@ -45,6 +45,7 @@ body {
 
   &__report {
     width: 48px;
+    font-size: 11px;
   }
 
   &__caption {
@@ -53,9 +54,14 @@ body {
   }
 
   &__caption-icon {
-    font-size: 18px;
+    font-size: 16px;
     vertical-align: bottom;
-    margin-right: 5px;
+    margin-right: 4px;
+    transition: transform 0.25s ease-out;
+
+    &.mod-rotate-180 {
+      transform: rotate(-180deg);
+    }
   }
 
   &__test-name {
@@ -142,6 +148,13 @@ td.table-body__pattern {
 
 .finished-experiments {
   margin-top: 10px;
+  user-select: none;
+  transition: opacity 0.2s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 .sections {
@@ -166,4 +179,10 @@ td.table-body__pattern {
   stroke-width: 0;
   stroke: currentColor;
   fill: currentColor;
+}
+
+.divider {
+  margin-top: 16px;
+  border: none;
+  border-top: solid 1px #dadce0;
 }

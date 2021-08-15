@@ -33,6 +33,7 @@ export default function PopupOptimize(props: any) {
   Log.d("url: " + url);
 
   const [helpVisible, setHelpVisible] = useState(false);
+  const [endedVisible, setEndedVisible] = useState(false);
 
   function toggleHelp() {
     setHelpVisible(!helpVisible);
@@ -86,11 +87,7 @@ export default function PopupOptimize(props: any) {
           </li>
         );
       });
-      return (
-        <ul className="sections">
-          {sectionInners.map((s) => s)}
-        </ul>
-      );
+      return <ul className="sections">{sectionInners.map((s) => s)}</ul>;
     } else {
       return (
         <ol className="patterns">
@@ -109,7 +106,7 @@ export default function PopupOptimize(props: any) {
         <svg className="icon experiments-table__caption-icon">
           <use xlinkHref="/img/icons.svg#icon-sunny-outline" />
         </svg>
-        <span className="experiments-table__caption">Active Experiments</span>
+        <span className="experiments-table__caption">Active Experiences</span>
         <ExperimentsTable
           url={url}
           experiments={activeExperiments}
@@ -117,16 +114,23 @@ export default function PopupOptimize(props: any) {
         />
       </div>
 
-      <div className="finished-experiments">
-        <svg className="icon experiments-table__caption-icon">
-          <use xlinkHref="/img/icons.svg#icon-check-circle" />
+      <hr className="divider" />
+
+      <div
+        className="finished-experiments"
+        onClick={() => setEndedVisible(!endedVisible)}
+      >
+        <svg className={'icon experiments-table__caption-icon ' + (endedVisible ? 'mod-rotate-180' : '') }>
+          <use xlinkHref="/img/icons.svg#icon-expand-more" />
         </svg>
-        <span className="experiments-table__caption">Finished Experiments</span>
-        <ExperimentsTable
-          url={url}
-          experiments={finishedExperiments}
-          experimentPatterns={ExperimentPatterns}
-        />
+        <span className="experiments-table__caption">Ended Experiences</span>
+        <Accordion isOpen={endedVisible}>
+          <ExperimentsTable
+            url={url}
+            experiments={finishedExperiments}
+            experimentPatterns={ExperimentPatterns}
+          />
+        </Accordion>
       </div>
 
       <div className="experiments-buttons">
