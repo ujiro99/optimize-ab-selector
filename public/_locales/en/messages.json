@@ -44,5 +44,11 @@
   },
   "columnNamePattern": {
     "message": "Variant"
+  },
+  "msgGoogleOptimizeNotActive": {
+    "message": "Google Optimize cannot be found on this page."
+  },
+  "msgGoogleOptimizeNotSaved": {
+    "message": "Google Optimize experience settings not saved. Please see help."
   }
 }

@@ -222,8 +222,17 @@ body {
   fill: currentColor;
 }
 
-.divider {
-  margin-top: 16px;
-  border: none;
-  border-top: solid 1px $border-color;
+.message {
+  margin-bottom: 14px;
+  color: #ce5755;
+
+  span {
+    display: block;
+  }
+
+  &__icon {
+    font-size: 14px;
+    vertical-align: sub;
+    margin-right: 2px;
+  }
 }

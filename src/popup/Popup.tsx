@@ -168,6 +168,7 @@ export default function Popup(props: any) {
   const tabId = props.tabId;
   const experimentInCookie: ExperimentInCookie[] = props.current || [];
   let savedExperiments: Experiment[] = props.saved || [];
+  const experienceSaved = savedExperiments.length === 0;
 
   // Merge experiments found in cookies
   for (const expe of experimentInCookie) {
@@ -275,6 +276,17 @@ export default function Popup(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
+      <p className="message">
+        {experienceSaved ? (
+          <span>
+            <svg className="icon message__icon">
+              <use xlinkHref="/img/icons.svg#icon-info" />
+            </svg>
+            {i18n.t("msgGoogleOptimizeNotSaved")}
+          </span>
+        ) : null}
+      </p>
+
       <ExperimentsTable
         url={url}
         experiments={savedExperiments}

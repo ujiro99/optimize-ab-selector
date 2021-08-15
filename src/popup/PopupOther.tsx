@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
-import { EXPERIMENT_STATUS, EXPERIMENT_TYPE } from "@/utils/constants";
+import { Experiment } from "@/@types/googleOptimize.d";
+import { EXPERIMENT_STATUS } from "@/utils/constants";
 
-import {
-  ExperimentsTable,
-  ExperimentPatternProps,
-} from "@/components/ExperimentsTable";
+import { ExperimentsTable } from "@/components/ExperimentsTable";
 import { Help } from "@/components/Help";
 import { Accordion } from "@/components/Accordion";
+
+import { ExperimentPatterns } from "@/popup/PopupOptimize";
 
 import { equalsOptimizeUrl } from "@/services/googleOptimize";
 import Log from "@/services/log";
@@ -15,52 +14,8 @@ import * as i18n from "@/services/i18n";
 
 import "@/popup/Popup.scss";
 
-/**
- * ExperimentPatterns component
- */
-export function ExperimentPatterns(props: ExperimentPatternProps) {
-  const patterns: ExperimentPattern[] = props.patterns;
-  const type = props.type;
-  if (type === EXPERIMENT_TYPE.MVT) {
-    // group by sectionName
-    let sections = patterns.reduce((acc, cur) => {
-      let section = cur.sectionName;
-      if (!acc[section]) acc[section] = [];
-      acc[section].push({
-        key: cur.name || cur.number,
-        name: cur.name,
-      });
-      return acc;
-    }, {});
-
-    const sectionInners = Object.keys(sections).map((key) => {
-      let exps = sections[key];
-      return (
-        <li className="sections__list" key={key}>
-          <span className="sections__name">{key}</span>
-          <ol className="patterns">
-            {exps.map((p: any) => (
-              <li key={p.key}>{p.name}</li>
-            ))}
-          </ol>
-        </li>
-      );
-    });
-    return <ul className="sections">{sectionInners.map((s) => s)}</ul>;
-  } else {
-    return (
-      <ol className="patterns">
-        {patterns.map((p) => (
-          <li key={p.name || p.number}>{p.name}</li>
-        ))}
-      </ol>
-    );
-  }
-}
-
-export default function PopupOptimize(props: any) {
+export default function PopupOther(props: any) {
   const url = props.url;
-
   const savedExperiments: Experiment[] = props.saved || [];
   const experienceSaved = savedExperiments.length === 0;
   const activeExperiments: Experiment[] = savedExperiments
@@ -83,27 +38,16 @@ export default function PopupOptimize(props: any) {
     setHelpVisible(!helpVisible);
   }
 
-  /**
-   * Delete all saved data.
-   */
-  function clearStorage() {
-    if (window.confirm(i18n.t("labelClear"))) {
-      chrome.runtime.sendMessage(
-        {
-          command: "clearStorage",
-        },
-        () => {
-          Log.d("clearStorage finished");
-          window.close();
-        }
-      );
-    }
-  }
-
   // Show popup window.
   return (
     <div className="popupContainer">
       <p className="message">
+        <span>
+          <svg className="icon message__icon">
+            <use xlinkHref="/img/icons.svg#icon-info" />
+          </svg>
+          {i18n.t("msgGoogleOptimizeNotActive")}
+        </span>
         {experienceSaved ? (
           <span>
             <svg className="icon message__icon">
@@ -151,9 +95,6 @@ export default function PopupOptimize(props: any) {
       <div className="experiments-buttons">
         <button className="experiments-help" onClick={toggleHelp}>
           {i18n.t("btnHelp")}
-        </button>
-        <button className="experiments-update" onClick={clearStorage}>
-          {i18n.t("btnClear")}
         </button>
       </div>
 
