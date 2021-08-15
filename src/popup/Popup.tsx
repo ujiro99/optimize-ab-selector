@@ -76,6 +76,7 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
         name={id}
         type="text"
         value={patternInCookie.pattern}
+        className="experiments-table__input"
         onChange={onChange}
       />
     );
@@ -246,7 +247,7 @@ export default function Popup(props: any) {
 
     Log.d(experiment);
 
-    let newVal = e.target.value;;
+    let newVal = e.target.value;
     if (e.target instanceof HTMLSelectElement) {
       if (type === EXPERIMENT_TYPE.MVT) {
         let patterns = experiment.pattern.split("-");

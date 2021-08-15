@@ -106,7 +106,7 @@ export default function PopupOptimize(props: any) {
         <svg className="icon experiments-table__caption-icon">
           <use xlinkHref="/img/icons.svg#icon-sunny-outline" />
         </svg>
-        <span className="experiments-table__caption">Active Experiences</span>
+        <span className="experiments-table__caption">Active</span>
         <ExperimentsTable
           url={url}
           experiments={activeExperiments}
@@ -123,7 +123,7 @@ export default function PopupOptimize(props: any) {
         <svg className={'icon experiments-table__caption-icon ' + (endedVisible ? 'mod-rotate-180' : '') }>
           <use xlinkHref="/img/icons.svg#icon-expand-more" />
         </svg>
-        <span className="experiments-table__caption">Ended Experiences</span>
+        <span className="experiments-table__caption">Ended</span>
         <Accordion isOpen={endedVisible}>
           <ExperimentsTable
             url={url}
