@@ -1,8 +1,8 @@
 .accordion {
   overflow: hidden;
-  transition: height 0.28s ease-out;
+  transition: height 0.3s ease-out;
 
   &.mod-close {
-    height: 0!important;
+    height: 0 !important;
   }
 }

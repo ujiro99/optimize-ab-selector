@@ -47,7 +47,7 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
  */
 function ExperimentPatternsAB(props: ExperimentPatternProps) {
   const patterns = props.patterns;
-  const inCookies = props.selected;
+  const patternInCookie = props.selected;
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => props.onChangePattern(e, EXPERIMENT_TYPE.AB);
@@ -57,7 +57,7 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
     return (
       <select
         name={id}
-        value={inCookies.pattern}
+        value={patternInCookie.pattern}
         className="experiments-table__select"
         onChange={onChange}
       >
@@ -75,7 +75,8 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
       <input
         name={id}
         type="text"
-        value={inCookies.pattern}
+        value={patternInCookie.pattern}
+        className="experiments-table__input"
         onChange={onChange}
       />
     );
@@ -87,7 +88,7 @@ function ExperimentPatternsAB(props: ExperimentPatternProps) {
  */
 function ExperimentPatternsMVT(props: ExperimentPatternProps) {
   const patterns = props.patterns;
-  const inCookies = props.selected;
+  const patternInCookie = props.selected;
   const id = patterns[0].testId;
 
   const onChange = (
@@ -96,7 +97,7 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
 
   let formList: JSX.Element[];
 
-  if (patterns[0].sectionName) {
+  if (patterns[0].sectionName && patternInCookie.pattern) {
     // This experiment is parsed.
 
     // group by sectionName
@@ -110,7 +111,7 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
     // create multiple select elements.
     formList = Object.keys(sections).map((section, index) => {
       const patternsInSection = sections[section];
-      const s = inCookies.pattern.split("-")[index];
+      const s = patternInCookie.pattern.split("-")[index];
 
       return (
         <li key={section}>
@@ -140,7 +141,7 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
         <input
           name={id}
           type="text"
-          value={inCookies.pattern}
+          value={patternInCookie.pattern}
           className="experiments-table__input"
           onChange={onChange}
         />
@@ -167,6 +168,7 @@ export default function Popup(props: any) {
   const tabId = props.tabId;
   const experimentInCookie: ExperimentInCookie[] = props.current || [];
   let savedExperiments: Experiment[] = props.saved || [];
+  const experienceSaved = savedExperiments.length === 0;
 
   // Merge experiments found in cookies
   for (const expe of experimentInCookie) {
@@ -246,7 +248,7 @@ export default function Popup(props: any) {
 
     Log.d(experiment);
 
-    let newVal = e.target.value;;
+    let newVal = e.target.value;
     if (e.target instanceof HTMLSelectElement) {
       if (type === EXPERIMENT_TYPE.MVT) {
         let patterns = experiment.pattern.split("-");
@@ -274,6 +276,17 @@ export default function Popup(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
+      <p className="message">
+        {experienceSaved ? (
+          <span>
+            <svg className="icon message__icon">
+              <use xlinkHref="/img/icons.svg#icon-info" />
+            </svg>
+            {i18n.t("msgGoogleOptimizeNotSaved")}
+          </span>
+        ) : null}
+      </p>
+
       <ExperimentsTable
         url={url}
         experiments={savedExperiments}

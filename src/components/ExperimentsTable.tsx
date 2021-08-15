@@ -25,7 +25,7 @@ function ExperimentName(props: any) {
       {nameExists ? (
         <span className="experiments-table__test-name">{experiment.name}</span>
       ) : null}
-      <span className="experiments-table__test-id">{experiment.testId}</span>
+      <span className="experiments-table__test-id">ID: {experiment.testId}</span>
     </a>
   );
 }

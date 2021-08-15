@@ -1,4 +1,6 @@
 $primary-color: #505050;
+$border-color: #dadce0;
+$form-border-color: #b6b9bb;
 
 // Chrome applies an 8px margin by default (gross).
 body {
@@ -13,18 +15,26 @@ body {
   width: 700px;
   height: auto;
   padding: 10px 16px 0;
+  background-color: #f8f9fa;
 }
 
 .experiments-table {
-  margin-top: 4px;
-  border-collapse: collapse;
-  border-spacing: 0;
+  margin-top: 10px;
   width: 100%;
   table-layout: fixed;
+  border-spacing: 0;
+  border-radius: 8px;
+  border: solid 1px $border-color;
+  background-color: #fff;
+  overflow: hidden;
 
   th,
   td {
-    border: solid 1px;
+    border-left: solid 1px $border-color;
+
+    &:first-child {
+      border-left: none;
+    }
   }
 
   th {
@@ -37,6 +47,7 @@ body {
     max-width: 300px;
     overflow: hidden;
     word-break: break-all;
+    border-top: solid 1px $border-color;
   }
 
   thead {
@@ -45,17 +56,27 @@ body {
 
   &__report {
     width: 48px;
+    font-size: 11px;
   }
 
   &__caption {
     font-size: 14px;
     text-align: left;
+    color: #5f6368;
+    line-height: 1.4;
   }
 
   &__caption-icon {
-    font-size: 18px;
+    margin-right: 4px;
     vertical-align: bottom;
-    margin-right: 5px;
+    font-size: 16px;
+    color: #5f6368;
+    line-height: 1.4;
+    transition: transform 0.25s ease-out;
+
+    &.mod-rotate-180 {
+      transform: rotate(-180deg);
+    }
   }
 
   &__test-name {
@@ -91,14 +112,18 @@ body {
 
   &__select {
     width: 100%;
+    border: solid 1px $form-border-color;
+    padding: 4px 2px;
+    border-radius: 4px;
+    color: $primary-color;
   }
-
-  // &__target-url {
-  //   width: 250px - 1px;
-  // }
-  // &__pattern {
-  //   width: 150px - 2px;
-  // }
+  &__input {
+    border: solid 1px $form-border-color;
+    padding: 4px 0px 4px 4px;
+    border-radius: 4px;
+    color: $primary-color;
+    width: calc(100% - 6px);
+  }
 }
 
 .experiments-table + .experiments-table {
@@ -106,42 +131,71 @@ body {
 }
 
 .experiments-buttons {
-  margin: 8px 0;
+  margin: 12px 0;
   text-align: right;
 }
 
 .experiments-update {
   display: inline-block;
+  padding: 4px 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #1a73e8;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 .experiments-help {
   display: inline-block;
   margin: 0 8px;
+  padding: 3px 10px;
+  border: solid 1px $form-border-color;
+  border-radius: 4px;
+  background: white;
+  color: $primary-color;
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
 
   &__close {
     display: block;
     margin: 16px auto;
+    padding: 2px 10px;
+    border: solid 1px $form-border-color;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    user-select: none;
   }
 }
 
-.table-body {
+.experiments-table .table-body {
+  &__name {
+    padding-left: 16px;
+  }
+
   &__report {
     text-align: center;
   }
-
-  &__pattern {
-    input {
-      width: 100%;
-    }
-  }
-}
-
-td.table-body__pattern {
-  padding-right: 16px;
 }
 
 .finished-experiments {
-  margin-top: 10px;
+  margin-top: 12px;
+  user-select: none;
+  transition: opacity 0.2s ease-out;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.7;
+  }
 }
 
 .sections {
@@ -166,4 +220,19 @@ td.table-body__pattern {
   stroke-width: 0;
   stroke: currentColor;
   fill: currentColor;
+}
+
+.message {
+  margin-bottom: 14px;
+  color: #ce5755;
+
+  span {
+    display: block;
+  }
+
+  &__icon {
+    font-size: 14px;
+    vertical-align: sub;
+    margin-right: 2px;
+  }
 }
