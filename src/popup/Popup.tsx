@@ -164,29 +164,46 @@ type StateType = {
 
 const reducerFunc = (state: StateType, action: any) => {
   switch (action.type) {
-    case "setSelectedPatterns": {
-      if (action.testId) {
-        const index = state.changedValues.findIndex(
-          (x: ChangedValueType) => x.testId === action.testId
-        );
-        const valIndex = action.value.findIndex(
-          (x: ExperimentPattern) => x.testId === action.testId
-        );
-        if (index < 0) {
-          state.changedValues.push({
-            testId: action.testId,
-            value: action.value[valIndex].pattern,
-          });
-        } else {
-          state.changedValues[index].value = action.value[valIndex].pattern;
-        }
-        return {
-          ...state,
-          selectedPatterns: action.value,
-          changedValues: state.changedValues,
-        };
+    case "setPattern": {
+      // Update changedValues.
+      const index = state.changedValues.findIndex(
+        (x: ChangedValueType) => x.testId === action.testId
+      );
+      if (index < 0) {
+        state.changedValues.push({
+          testId: action.testId,
+          value: action.value,
+        });
+      } else {
+        state.changedValues[index].value = action.value;
       }
-      return { ...state, selectedPatterns: action.value };
+
+      // Update selectedPatterns.
+      let selectedPatterns: ExperimentInCookie[] = state.selectedPatterns;
+      const experiment = selectedPatterns.find(
+        (p) => p.testId === action.testId
+      );
+
+      let expire = ExperimentExpireDefault;
+      if (experiment) {
+        expire = experiment.expire;
+        selectedPatterns = selectedPatterns.filter(
+          (p) => p.testId !== action.testId
+        );
+      }
+
+      selectedPatterns.push({
+        testId: action.testId,
+        type: action.testType,
+        expire: expire,
+        pattern: action.value,
+      });
+
+      return {
+        ...state,
+        selectedPatterns: selectedPatterns,
+        changedValues: state.changedValues,
+      };
     }
     default:
       Log.w("action not found", action);
@@ -273,37 +290,28 @@ export default function Popup(props: any) {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     type: ExperimentType
   ) {
-    const selectedPatterns: ExperimentInCookie[] = state.selectedPatterns;
     const testId = e.target.name.split(NameSeparator)[0];
-    const indexInSection = e.target.name.split(NameSeparator)[1];
-    const experiment = selectedPatterns.find((p) => p.testId === testId);
+    const experiment = state.selectedPatterns.find(
+      (p: ExperimentInCookie) => p.testId === testId
+    );
 
     let newVal = e.target.value;
     if (e.target instanceof HTMLSelectElement) {
       if (type === EXPERIMENT_TYPE.MVT) {
+        // For MVT, set a value that joins multiple patterns with a hyphen.
+        // e.g.) 0-2-1
         let patterns = experiment.pattern.split("-");
+        const indexInSection = e.target.name.split(NameSeparator)[1];
         patterns[indexInSection] = e.target.value;
         newVal = patterns.join("-");
       }
     }
 
-    if (experiment) {
-      // This experiment is started.
-      experiment.pattern = newVal;
-    } else {
-      // This experiment isn't started yet.
-      selectedPatterns.push({
-        testId: testId,
-        type: type,
-        expire: ExperimentExpireDefault,
-        pattern: newVal,
-      });
-    }
-
     dispatch({
-      type: "setSelectedPatterns",
+      type: "setPattern",
       testId: testId,
-      value: selectedPatterns,
+      testType: type,
+      value: newVal,
     });
   }
 

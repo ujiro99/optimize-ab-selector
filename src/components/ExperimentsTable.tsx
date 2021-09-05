@@ -94,7 +94,7 @@ function ExperimentTarget(props: any) {
  *
  * @param type {ExperimentType} Test Type of experiment.
  * @param patterns {ExperimentPattern[]} Information of patterns of experiment.
- * @param selected {ExperimentPattern[]} Selected patterns.
+ * @param selected {ExperimentInCookie} Selected patterns.
  * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
  */
 export type ExperimentPatternProps = {
