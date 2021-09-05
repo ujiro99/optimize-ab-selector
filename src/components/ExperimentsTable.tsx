@@ -25,7 +25,9 @@ function ExperimentName(props: any) {
       {nameExists ? (
         <span className="experiments-table__test-name">{experiment.name}</span>
       ) : null}
-      <span className="experiments-table__test-id">ID: {experiment.testId}</span>
+      <span className="experiments-table__test-id">
+        ID: {experiment.testId}
+      </span>
     </a>
   );
 }
@@ -89,8 +91,10 @@ function ExperimentTarget(props: any) {
 
 /**
  * @typedef ExperimentPatternProps
+ *
+ * @param type {ExperimentType} Test Type of experiment.
  * @param patterns {ExperimentPattern[]} Information of patterns of experiment.
- * @param selected {ExperimentPattern[]} Selected patterns.
+ * @param selected {ExperimentInCookie} Selected patterns.
  * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
  */
 export type ExperimentPatternProps = {
@@ -111,6 +115,7 @@ export type ExperimentPatternProps = {
  * @param experimentPatterns {React.VoidFunctionComponent} Component of experiment patterns.
  * @param patterns {ExperimentPattern[]} Current Patterns.
  * @param onChangePattern {Function} Callback function to be executed when pattern is selected.
+ * @param changed {string[]} TestIds with modified variants.
  */
 type ExperimentsTableProps = {
   url: string;
@@ -121,6 +126,7 @@ type ExperimentsTableProps = {
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     type: ExperimentType
   ) => void;
+  changed?: string[];
 };
 
 /**
@@ -131,15 +137,20 @@ type ExperimentsTableProps = {
 export function ExperimentsTable({
   url,
   experiments,
-  patterns=[],
+  patterns = [],
   onChangePattern,
   experimentPatterns,
+  changed,
 }: ExperimentsTableProps) {
-
   const ExperimentPatterns = experimentPatterns;
   const tableBody = [];
   for (const expe of experiments) {
     let selected = patterns.find((s) => s.testId === expe.testId);
+    let isVariantChagned = false;
+    if (changed) {
+      isVariantChagned = changed.findIndex((id) => id === expe.testId) >= 0;
+    }
+
     if (!selected) {
       selected = {
         testId: undefined,
@@ -159,7 +170,7 @@ export function ExperimentsTable({
         <td>
           <ExperimentTarget experiment={expe} url={url} />
         </td>
-        <td className="table-body__pattern">
+        <td className={'table-body__pattern' + (isVariantChagned ? ' mod-changed' : '')}>
           <ExperimentPatterns
             type={expe.type}
             patterns={expe.patterns}
@@ -174,10 +185,18 @@ export function ExperimentsTable({
     <table className="experiments-table">
       <thead>
         <tr>
-          <th className="experiments-table__name">{i18n.t("columnNameName")}</th>
-          <th className="experiments-table__report">{i18n.t("columnNameReport")}</th>
-          <th className="experiments-table__target-url">{i18n.t("columnNameEditor")}</th>
-          <th className="experiments-table__pattern">{i18n.t("columnNamePattern")}</th>
+          <th className="experiments-table__name">
+            {i18n.t("columnNameName")}
+          </th>
+          <th className="experiments-table__report">
+            {i18n.t("columnNameReport")}
+          </th>
+          <th className="experiments-table__target-url">
+            {i18n.t("columnNameEditor")}
+          </th>
+          <th className="experiments-table__pattern">
+            {i18n.t("columnNamePattern")}
+          </th>
         </tr>
       </thead>
       <tbody>{tableBody}</tbody>

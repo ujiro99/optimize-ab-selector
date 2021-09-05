@@ -1,6 +1,8 @@
 $primary-color: #505050;
 $border-color: #dadce0;
 $form-border-color: #b6b9bb;
+$background-color: #f8f9fa;
+$table-color: #fff;
 
 // Chrome applies an 8px margin by default (gross).
 body {
@@ -15,7 +17,7 @@ body {
   width: 700px;
   height: auto;
   padding: 10px 16px 0;
-  background-color: #f8f9fa;
+  background-color: $background-color;
 }
 
 .experiments-table {
@@ -25,7 +27,7 @@ body {
   border-spacing: 0;
   border-radius: 8px;
   border: solid 1px $border-color;
-  background-color: #fff;
+  background-color: $table-color;
   overflow: hidden;
 
   th,
@@ -116,6 +118,7 @@ body {
     padding: 4px 2px;
     border-radius: 4px;
     color: $primary-color;
+    outline: none;
   }
   &__input {
     border: solid 1px $form-border-color;
@@ -123,6 +126,7 @@ body {
     border-radius: 4px;
     color: $primary-color;
     width: calc(100% - 6px);
+    outline: none;
   }
 }
 
@@ -140,13 +144,17 @@ body {
   padding: 4px 14px;
   border: none;
   border-radius: 4px;
-  background-color: #1a73e8;
+  background-color: gray;
   color: white;
   cursor: pointer;
   user-select: none;
 
   &:hover {
     opacity: 0.7;
+  }
+
+  &.mod-changed {
+    background-color: #1a73e8;
   }
 }
 
@@ -184,6 +192,15 @@ body {
 
   &__report {
     text-align: center;
+  }
+
+  &__pattern {
+    background-color: $table-color;
+    // transition: background-color 0.1s ease-out;
+  }
+
+  &__pattern.mod-changed {
+    background-color: #e4e0ff;
   }
 }
 
@@ -235,4 +252,12 @@ body {
     vertical-align: sub;
     margin-right: 2px;
   }
+}
+
+.debug-popup-data {
+  font-size: 1px;
+  height: 1px;
+  color: $background-color;
+  overflow: hidden;
+  margin: 0;
 }

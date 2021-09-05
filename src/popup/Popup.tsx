@@ -152,10 +152,58 @@ function ExperimentPatternsMVT(props: ExperimentPatternProps) {
   return <ul className="experiments-table__section">{formList}</ul>;
 }
 
-const reducerFunc = (state, action) => {
+export type ChangedValueType = {
+  testId: string;
+  value: string;
+};
+
+type StateType = {
+  selectedPatterns: ExperimentInCookie[];
+  changedValues: ChangedValueType[];
+};
+
+const reducerFunc = (state: StateType, action: any) => {
   switch (action.type) {
-    case "setSelectedPatterns": {
-      return { ...state, selectedPatterns: action.value };
+    case "setPattern": {
+      // Update changedValues.
+      const index = state.changedValues.findIndex(
+        (x: ChangedValueType) => x.testId === action.testId
+      );
+      if (index < 0) {
+        state.changedValues.push({
+          testId: action.testId,
+          value: action.value,
+        });
+      } else {
+        state.changedValues[index].value = action.value;
+      }
+
+      // Update selectedPatterns.
+      let selectedPatterns: ExperimentInCookie[] = state.selectedPatterns;
+      const experiment = selectedPatterns.find(
+        (p) => p.testId === action.testId
+      );
+
+      let expire = ExperimentExpireDefault;
+      if (experiment) {
+        expire = experiment.expire;
+        selectedPatterns = selectedPatterns.filter(
+          (p) => p.testId !== action.testId
+        );
+      }
+
+      selectedPatterns.push({
+        testId: action.testId,
+        type: action.testType,
+        expire: expire,
+        pattern: action.value,
+      });
+
+      return {
+        ...state,
+        selectedPatterns: selectedPatterns,
+        changedValues: state.changedValues,
+      };
     }
     default:
       Log.w("action not found", action);
@@ -201,8 +249,9 @@ export default function Popup(props: any) {
   );
   Log.d(savedExperiments);
 
-  const initialState = {
+  const initialState: StateType = {
     selectedPatterns: experimentInCookie,
+    changedValues: [],
   };
   const [state, dispatch] = useReducer(reducerFunc, initialState);
   Log.d(state.selectedPatterns);
@@ -241,36 +290,35 @@ export default function Popup(props: any) {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     type: ExperimentType
   ) {
-    const selectedPatterns: ExperimentInCookie[] = state.selectedPatterns;
     const testId = e.target.name.split(NameSeparator)[0];
-    const indexInSection = e.target.name.split(NameSeparator)[1];
-    const experiment = selectedPatterns.find((p) => p.testId === testId);
-
-    Log.d(experiment);
+    const experiment = state.selectedPatterns.find(
+      (p: ExperimentInCookie) => p.testId === testId
+    );
 
     let newVal = e.target.value;
     if (e.target instanceof HTMLSelectElement) {
       if (type === EXPERIMENT_TYPE.MVT) {
+        // For MVT, set a value that joins multiple patterns with a hyphen.
+        // e.g.) 0-2-1
         let patterns = experiment.pattern.split("-");
+        const indexInSection = e.target.name.split(NameSeparator)[1];
         patterns[indexInSection] = e.target.value;
         newVal = patterns.join("-");
       }
     }
 
-    if (experiment) {
-      experiment.pattern = newVal;
-    } else {
-      // This experiment isn't started yet.
-      selectedPatterns.push({
-        testId: testId,
-        type: type,
-        expire: ExperimentExpireDefault,
-        pattern: newVal,
-      });
-    }
+    dispatch({
+      type: "setPattern",
+      testId: testId,
+      testType: type,
+      value: newVal,
+    });
+  }
 
-    Log.d(selectedPatterns);
-    dispatch({ type: "setSelectedPatterns", value: selectedPatterns });
+  const changedIds = state.changedValues.map((x) => x.testId);
+  let changedTxt = "";
+  for (const v of state.changedValues) {
+    changedTxt += v.testId + v.value;
   }
 
   // Show popup window.
@@ -293,13 +341,24 @@ export default function Popup(props: any) {
         patterns={state.selectedPatterns}
         onChangePattern={changePattern}
         experimentPatterns={ExperimentPatterns}
+        changed={changedIds}
       />
+
+      <pre className="debug-popup-data">
+        <code>{changedTxt}</code>
+      </pre>
 
       <div className="experiments-buttons">
         <button className="experiments-help" onClick={toggleHelp}>
           {i18n.t("btnHelp")}
         </button>
-        <button className="experiments-update" onClick={requestUpdate}>
+        <button
+          className={
+            "experiments-update" +
+            (state.changedValues.length > 0 ? " mod-changed" : "")
+          }
+          onClick={requestUpdate}
+        >
           {i18n.t("btnApply")}
         </button>
       </div>
