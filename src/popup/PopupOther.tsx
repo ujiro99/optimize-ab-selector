@@ -59,9 +59,6 @@ export default function PopupOther(props: any) {
       </p>
 
       <div className="active-experiments">
-        <svg className="icon experiments-table__caption-icon">
-          <use xlinkHref="/img/icons.svg#icon-sunny-outline" />
-        </svg>
         <span className="experiments-table__caption">Active</span>
         <ExperimentsTable
           url={url}
