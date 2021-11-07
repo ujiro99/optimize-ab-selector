@@ -4,6 +4,8 @@ import Popup from "@/popup/Popup";
 import PopupOptimize from "@/popup/PopupOptimize";
 import PopupOther from "@/popup/PopupOther";
 
+import "@/utils/workaround";
+
 import { Experiment, ExperimentInCookie } from "@/@types/googleOptimize.d";
 
 import Tabs from "@/services/tabs";
