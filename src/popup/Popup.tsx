@@ -324,16 +324,16 @@ export default function Popup(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
-      <p className="message">
-        {experienceSaved ? (
+      {experienceSaved ? (
+        <p className="message">
           <span>
             <svg className="icon message__icon">
               <use xlinkHref="/img/icons.svg#icon-info" />
             </svg>
             {i18n.t("msgGoogleOptimizeNotSaved")}
           </span>
-        ) : null}
-      </p>
+        </p>
+      ) : null}
 
       <ExperimentsTable
         url={url}

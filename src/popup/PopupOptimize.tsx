@@ -102,22 +102,19 @@ export default function PopupOptimize(props: any) {
 
   // Show popup window.
   return (
-    <div className="popupContainer">
-      <p className="message">
-        {experienceSaved ? (
+    <div className="popupContainer in-optimize">
+      {experienceSaved ? (
+        <p className="message">
           <span>
             <svg className="icon message__icon">
               <use xlinkHref="/img/icons.svg#icon-info" />
             </svg>
             {i18n.t("msgGoogleOptimizeNotSaved")}
           </span>
-        ) : null}
-      </p>
+        </p>
+      ) : null}
 
       <div className="active-experiments">
-        <svg className="icon experiments-table__caption-icon">
-          <use xlinkHref="/img/icons.svg#icon-sunny-outline" />
-        </svg>
         <span className="experiments-table__caption">Active</span>
         <ExperimentsTable
           url={url}
