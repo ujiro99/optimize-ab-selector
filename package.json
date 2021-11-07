@@ -29,7 +29,8 @@
     "typescript": "^3.9.10",
     "webpack": "^5.47.1",
     "webpack-cli": "^3.3.12",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "set-value": ">=4.0.1"
   },
   "dependencies": {
     "copy-webpack-plugin": "^6.2.1",
