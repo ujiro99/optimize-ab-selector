@@ -16,12 +16,10 @@ body {
   font-size: 12px;
   width: 700px;
   height: auto;
-  padding: 10px 16px 0;
-  background-color: $background-color;
+  padding: 18px 16px 0;
 }
 
 .experiments-table {
-  margin-top: 10px;
   width: 100%;
   table-layout: fixed;
   border-spacing: 0;
@@ -45,7 +43,7 @@ body {
   }
 
   td {
-    padding: 8px;
+    padding: 8px 8px 12px;
     max-width: 300px;
     overflow: hidden;
     word-break: break-all;
@@ -128,6 +126,10 @@ body {
     width: calc(100% - 6px);
     outline: none;
   }
+}
+
+.in-optimize .experiments-table {
+  margin-top: 6px;
 }
 
 .experiments-table + .experiments-table {
