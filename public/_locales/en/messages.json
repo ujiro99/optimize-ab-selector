@@ -22,15 +22,18 @@
     "message": "Usage"
   },
   "helpStep1": {
-    "message": "First, open the \"Details\" tab on the the Google Optimize page displaying a experience."
+    "message": "First, display the Google Optimize test page."
   },
   "helpStep2": {
-    "message": "The Google Optimize AB Selector parse the test configuration from this page. When the parsing is completed successfully, the Google Optimize AB Selector icon will display a \"!\" mark."
+    "message": "Next, open the \"Details\" tab on the the Google Optimize page displaying a experience."
   },
   "helpStep3": {
-    "message": "Click the Google Optimize AB Selector icon to display a parsed test configuration. Click a URL on the Editor Page to open a page where you are running a test."
+    "message": "The Google Optimize AB Selector parse the test configuration from this page. When the parsing is completed successfully, the Google Optimize AB Selector icon will display a \"!\" mark."
   },
   "helpStep4": {
+    "message": "Click the Google Optimize AB Selector icon to display a parsed test configuration. Click a URL on the Editor Page to open a page where you are running a test."
+  },
+  "helpStep5": {
     "message": "You can change a pattern on the test page. Select a pattern you want to change and click the Apply button."
   },
   "columnNameName": {
@@ -46,9 +49,12 @@
     "message": "Variant"
   },
   "msgGoogleOptimizeNotActive": {
-    "message": "Google Optimize cannot be found on this page."
+    "message": "No running tests can be found on this page."
   },
   "msgGoogleOptimizeNotSaved": {
-    "message": "Google Optimize experience settings not saved. Please see help."
+    "message": "Google Optimize experience settings not saved. Please visit Google Optimize and load the test settings."
+  },
+  "msgPleasReadHelp": {
+    "message": "See the help for detailed instructions."
   }
 }

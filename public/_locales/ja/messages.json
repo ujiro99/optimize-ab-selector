@@ -22,15 +22,18 @@
     "message": "使い方"
   },
   "helpStep1": {
-    "message": "初めに、GoogleOptimizeのテストを表示するページで、「詳細」タブを開きます｡"
+    "message": "初めに、GoogleOptimizeのテストページを表示します。"
   },
   "helpStep2": {
-    "message": "Google Optimize AB Selectorは表示されている内容からテストの設定値を読み取ります。 読み取りが正常に完了すると、Google Optimize AB Selectorのアイコンに\"!\"マークが表示されます。"
+    "message": "次に、GoogleOptimizeのテストを表示するページで、「詳細」タブを開きます｡"
   },
   "helpStep3": {
-    "message": "Google Optimize AB Selectorのアイコンをクリックすると、読み取られた設定値が表示されます。 Editor PageのURLをクリックすると、テストを実行しているページを開きます。"
+    "message": "Google Optimize AB Selectorは表示されている内容からテストの設定値を読み取ります。 読み取りが正常に完了すると、Google Optimize AB Selectorのアイコンに\"!\"マークが表示されます。"
   },
   "helpStep4": {
+    "message": "Google Optimize AB Selectorのアイコンをクリックすると、読み取られた設定値が表示されます。 Editor PageのURLをクリックすると、テストを実行しているページを開きます。"
+  },
+  "helpStep5": {
     "message": "テストページではパターンの変更が行えます。 変更したいテストを選択し、適用ボタンをクリックしてください。"
   },
   "columnNameName": {
@@ -46,9 +49,12 @@
     "message": "パターン"
   },
   "msgGoogleOptimizeNotActive": {
-    "message": "このページではGoogleオプティマイズが見つかりません。"
+    "message": "このページでは実行中のテストが見つかりません。"
   },
   "msgGoogleOptimizeNotSaved": {
-    "message": "Googleオプティマイズのエクスペリエンス設定が保存されていません。ヘルプをご覧ください。"
+    "message": "Googleオプティマイズの設定が保存されていません。 Googleオプティマイズへアクセスして、テスト設定を読み込んでください。"
+  },
+  "msgPleasReadHelp": {
+    "message": "詳細な手順はヘルプをご覧ください。"
   }
 }

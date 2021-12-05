@@ -3,6 +3,10 @@
   padding: 30px 40px;
   background: white;
 
+  &__title {
+    font-size: 30px;
+  }
+
   &__item {
     padding: 10px;
     margin: 24px 0 0 24px;
@@ -17,14 +21,23 @@
 
     &.mod-step-1 {
       img {
-        width: 300px;
+        width: 500px;
       }
     }
     &.mod-step-2 {
       img {
+        width: 300px;
+      }
+    }
+    &.mod-step-3 {
+      img {
         width: 100px;
       }
     }
+  }
+
+  iframe + &__item {
+    margin-top: 40px;
   }
 
   &__number {

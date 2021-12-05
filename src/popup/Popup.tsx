@@ -216,7 +216,7 @@ export default function Popup(props: any) {
   const tabId = props.tabId;
   const experimentInCookie: ExperimentInCookie[] = props.current || [];
   let savedExperiments: Experiment[] = props.saved || [];
-  const experienceSaved = savedExperiments.length === 0;
+  const experienceEmpty = savedExperiments.length === 0;
 
   // Merge experiments found in cookies
   for (const expe of experimentInCookie) {
@@ -256,7 +256,7 @@ export default function Popup(props: any) {
   const [state, dispatch] = useReducer(reducerFunc, initialState);
   Log.d(state.selectedPatterns);
 
-  const [helpVisible, setHelpVisible] = useState(false);
+  const [helpVisible, setHelpVisible] = useState(experienceEmpty);
 
   /**
    * Request update a pattern.
@@ -324,7 +324,7 @@ export default function Popup(props: any) {
   // Show popup window.
   return (
     <div className="popupContainer">
-      {experienceSaved ? (
+      {experienceEmpty ? (
         <p className="message">
           <span>
             <svg className="icon message__icon">
@@ -332,6 +332,10 @@ export default function Popup(props: any) {
             </svg>
             {i18n.t("msgGoogleOptimizeNotSaved")}
           </span>
+          <a href="https://optimize.google.com/optimize/home" target="_blank">
+            https://optimize.google.com/optimize/
+          </a>
+          <span>{i18n.t("msgPleasReadHelp")}</span>
         </p>
       ) : null}
 
