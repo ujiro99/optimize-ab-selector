@@ -332,10 +332,10 @@ export default function Popup(props: any) {
             </svg>
             {i18n.t("msgGoogleOptimizeNotSaved")}
           </span>
-          <a href="https://optimize.google.com/optimize/">https://optimize.google.com/optimize/</a>
-          <span>
-            {i18n.t("msgPleasReadHelp")}
-          </span>
+          <a href="https://optimize.google.com/optimize/home" target="_blank">
+            https://optimize.google.com/optimize/
+          </a>
+          <span>{i18n.t("msgPleasReadHelp")}</span>
         </p>
       ) : null}
 
