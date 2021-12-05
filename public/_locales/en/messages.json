@@ -46,9 +46,12 @@
     "message": "Variant"
   },
   "msgGoogleOptimizeNotActive": {
-    "message": "Google Optimize cannot be found on this page."
+    "message": "No running tests can be found on this page."
   },
   "msgGoogleOptimizeNotSaved": {
-    "message": "Google Optimize experience settings not saved. Please see help."
+    "message": "Google Optimize experience settings not saved. Please visit Google Optimize and load the test settings."
+  },
+  "msgPleasReadHelp": {
+    "message": "See the help for detailed instructions."
   }
 }

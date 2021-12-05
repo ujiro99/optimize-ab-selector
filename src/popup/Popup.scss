@@ -244,10 +244,25 @@ body {
 .message {
   margin-top: 0;
   margin-bottom: 14px;
-  color: #ce5755;
+  color: #202020;
+  background-color: #f9dbdb;
+  border-radius: 6px;
+  padding: 1.2em 2.2em;
+
+  word-break: keep-all;
+  text-indent: -1em;
 
   span {
     display: block;
+  }
+
+  a {
+    line-height: 2;
+    font-size: 1.2em;
+  }
+
+  a + span {
+    margin-left: 1em;
   }
 
   &__icon {

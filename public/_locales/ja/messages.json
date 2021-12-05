@@ -46,9 +46,12 @@
     "message": "パターン"
   },
   "msgGoogleOptimizeNotActive": {
-    "message": "このページではGoogleオプティマイズが見つかりません。"
+    "message": "このページでは実行中のテストが見つかりません。"
   },
   "msgGoogleOptimizeNotSaved": {
-    "message": "Googleオプティマイズのエクスペリエンス設定が保存されていません。ヘルプをご覧ください。"
+    "message": "Googleオプティマイズの設定が保存されていません。 Googleオプティマイズへアクセスして、テスト設定を読み込んでください。"
+  },
+  "msgPleasReadHelp": {
+    "message": "詳細な手順はヘルプをご覧ください。"
   }
 }
