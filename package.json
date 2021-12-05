@@ -1,6 +1,6 @@
 {
   "name": "optimize-ab-selector",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "This is a chrome extension, allows you to select a variants of the Google Optimize.",
   "engines": {
     "node": "14.x"
