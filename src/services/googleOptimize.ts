@@ -7,7 +7,7 @@ import Cookie from "@/services/cookie";
 const GO_COOKIE_KEY = "_gaexp";
 
 /** Prefix value added to the Google Optimize cookie value */
-const GO_PREFIX = "GAX1.2.";
+const GO_PREFIX = "GAX1.3.";
 
 /**
  * Returns Lists of experiment founds in Cookie.
@@ -73,7 +73,7 @@ export async function switchPatterns(
   });
 
   // Generate new cookie value.
-  let generated =experiments 
+  let generated = experiments
     .map((exp) => `${exp.testId}.${exp.expire}.${exp.pattern}`)
     .join("!");
   generated = GO_PREFIX + generated;
@@ -91,6 +91,11 @@ export async function switchPatterns(
  * Parse a value of _gaexp on cookie.
  */
 function parseGaexp(value: string): ExperimentInCookie[] {
+  //
+  // value example:
+  //  - GAX1.3.-f48SgmLRl2mLm7ERqfkUg.19059.1
+  //  - GAX1.3.-f48SgmLRl2mLm7ERqfkUg.19059.1!FEJwvaarSEWFcD8-VljYcA.19059.1
+  //
   value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
