@@ -3,7 +3,7 @@ import * as EventPage from "@/@types/eventPage.d";
 import { IconStatus } from "@/utils/constants";
 
 import Log from "@/services/log";
-import Storage from "@/services/storage";
+import Storage, { STORAGE_KEY } from "@/services/storage";
 import * as Optimize from "@/services/googleOptimize";
 
 type IconStatus = typeof IconStatus[keyof typeof IconStatus];
@@ -78,14 +78,14 @@ const onMessageFuncs = {
 
     // save experiment to chrome storage.
     const newExperiment = param.experiment;
-    Storage.get("experiments").then((experiments: Experiment[]) => {
+    Storage.get(STORAGE_KEY.experiments).then((experiments: Experiment[]) => {
       experiments = experiments || [];
       const isNew = experiments.every((e) => e.testId !== newExperiment.testId);
       experiments = experiments.filter(
         (e) => e.testId !== newExperiment.testId
       );
       experiments.push(newExperiment);
-      Storage.set("experiments", experiments).then(() => {
+      Storage.set(STORAGE_KEY.experiments, experiments).then(() => {
         sendResponse(isNew);
       });
     });
@@ -97,7 +97,7 @@ const onMessageFuncs = {
    * Get saved experiments form chrome storage.
    */
   getSavedExperiments(_: any, sendResponse: Function) {
-    Storage.get("experiments").then((experiments) => {
+    Storage.get(STORAGE_KEY.experiments).then((experiments) => {
       sendResponse(experiments);
     });
 
@@ -136,17 +136,6 @@ const onMessageFuncs = {
         }
       );
     }
-    return true;
-  },
-
-  /**
-   * Remove all data in chrome storage.
-   */
-  clearStorage(_: any, sendResponse: Function) {
-    Storage.clear().then((res) => {
-      sendResponse(res);
-    });
-
     return true;
   },
 

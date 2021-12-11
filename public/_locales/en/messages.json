@@ -59,5 +59,8 @@
   },
   "detectSucceed": {
     "message": "Test detected!"
+  },
+  "optionEnableNotification":  {
+    "message": "Display a notification when an Experiment is detected."
   }
 }

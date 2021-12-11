@@ -4,6 +4,8 @@ import classnames from "classnames";
 
 import "@/scss/notification.scss";
 
+import Storage, { STORAGE_KEY } from "@/services/storage";
+
 function sleep(msec: number): Promise<unknown> {
   return new Promise((resolve) => setTimeout(resolve, msec));
 }
@@ -63,8 +65,12 @@ export function showNotification(
   elementId: string,
   options: NotificationProps
 ) {
-  ReactDOM.render(
-    <Notification title={options.title} message={options.message} />,
-    document.getElementById(elementId)
-  );
+  Storage.get(STORAGE_KEY.options).then((data) => {
+    if (data.show_notification) {
+      ReactDOM.render(
+        <Notification title={options.title} message={options.message} />,
+        document.getElementById(elementId)
+      );
+    }
+  });
 }
