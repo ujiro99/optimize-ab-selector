@@ -56,5 +56,11 @@
   },
   "msgPleasReadHelp": {
     "message": "詳細な手順はヘルプをご覧ください。"
+  },
+  "detectSucceed": {
+    "message": "テストを検出しました！"
+  },
+  "optionEnableNotification":  {
+    "message": "テスト検出時に通知を表示する"
   }
 }

@@ -1,0 +1,71 @@
+.notification {
+  position: absolute;
+  top: 124px;
+  right: 0;
+  transform: translateX(-10px);
+  border-radius: 2px;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  cursor: pointer;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 3px 1px -2px rgba(0, 0, 0, 0.12);
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  &__icon {
+    width: 1.6rem;
+    height: 1.6rem;
+    padding-right: 1rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__title {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  &__message {
+    margin: 3px 0 3px;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.54);
+    font-style: italic;
+  }
+
+  &--hidden {
+    display: none;
+  }
+
+  &--visible {
+    animation-name: slideIn;
+    animation-duration: 350ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: forwards;
+  }
+
+  &--visible-to-hidden {
+    animation-name: slideIn;
+    animation-duration: 250ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-fill-mode: forwards;
+    animation-direction: reverse;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(-10px);
+  }
+}

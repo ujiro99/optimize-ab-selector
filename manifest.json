@@ -30,6 +30,10 @@
       ]
     }
   ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
   "icons": {
     "16": "img/icon16.png",
     "48": "img/icon48.png",

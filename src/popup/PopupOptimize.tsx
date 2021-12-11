@@ -11,6 +11,7 @@ import { Accordion } from "@/components/Accordion";
 
 import { equalsOptimizeUrl } from "@/services/googleOptimize";
 import Log from "@/services/log";
+import Storage, { STORAGE_KEY } from "@/services/storage";
 import * as i18n from "@/services/i18n";
 
 import "@/popup/Popup.scss";
@@ -88,15 +89,10 @@ export default function PopupOptimize(props: any) {
    */
   function clearStorage() {
     if (window.confirm(i18n.t("labelClear"))) {
-      chrome.runtime.sendMessage(
-        {
-          command: "clearStorage",
-        },
-        () => {
+      Storage.remove(STORAGE_KEY.experiments).then(() => {
           Log.d("clearStorage finished");
           window.close();
-        }
-      );
+      });
     }
   }
 

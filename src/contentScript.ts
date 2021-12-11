@@ -1,7 +1,12 @@
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
 import { EXPERIMENT_STATUS, EXPERIMENT_TYPE } from "@/utils/constants";
 
+import * as i18n from "@/services/i18n";
 import Log from "@/services/log";
+
+import { showNotification } from "@/components/Notification";
+
+const notificationElmId = "optimize-ab-selector-notification";
 
 /**
  * Parse the DOM and extract Experiment information.
@@ -61,7 +66,7 @@ function parse(): Experiment {
       Log.d("section name: " + sectionName);
 
       // parse patterns
-      const mvtPatternElms = mvt.querySelectorAll('.opt-mvt-variation-name')
+      const mvtPatternElms = mvt.querySelectorAll(".opt-mvt-variation-name");
       mvtPatternElms.forEach((p, index) => {
         patterns.push({
           testId: experiment.testId,
@@ -70,8 +75,8 @@ function parse(): Experiment {
           number: index,
         });
         Log.d("pattern name: " + p.innerHTML.trim());
-      })
-    })
+      });
+    });
   }
 
   // targetUrl
@@ -138,6 +143,24 @@ function tryParse() {
 }
 
 /**
+ * Show a notification on the page.
+ *
+ * @param {string} message Message displayed above the notification.
+ */
+function showParseSuccessNotify(message: string) {
+  const n = document.getElementById(notificationElmId)
+  if (n == null) {
+    const elm = document.createElement("div");
+    elm.id = notificationElmId;
+    document.body.insertAdjacentElement("beforeend", elm);
+  }
+  showNotification(notificationElmId, {
+    title: i18n.t("detectSucceed"),
+    message: message,
+  });
+}
+
+/**
  * Check the element is hidden.
  *
  * @param {Node} el
@@ -151,6 +174,7 @@ let isFound = false;
 const dialogObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (isHidden(mutation.target) && !isFound) {
+      // When the loading dialog disappears, start parsing.
       const experiment = parse();
       if (experiment != null) {
         chrome.runtime.sendMessage({
@@ -158,6 +182,9 @@ const dialogObserver = new MutationObserver((mutations) => {
           parameter: {
             experiment: experiment,
           },
+        }, (res) => {
+          // if detect a new experiment, show a notification.
+          if (res) showParseSuccessNotify(experiment.name);
         });
         isFound = true;
         dialogObserver.disconnect();

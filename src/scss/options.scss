@@ -1,0 +1,18 @@
+.options-container {
+  padding: 18px 18px 18px 20px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+
+  &__name {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.87);
+    flex: 1;
+  }
+
+  &__input {
+    transform: scale(0.8, 0.8);
+  }
+}

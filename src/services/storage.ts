@@ -1,12 +1,19 @@
 import Log from "@/services/log";
 
+export const STORAGE_KEY = {
+  options: "options",
+  experiments: "experiments",
+};
+
+type StorageKey = typeof STORAGE_KEY[keyof typeof STORAGE_KEY];
+
 const Storage = {
   /**
    * Get a item from local storage.
    *
-   * @param {string} key of item in storage.
+   * @param {StorageKey} key of item in storage.
    */
-  get: (key: string): Promise<any> => {
+  get: (key: StorageKey): Promise<any> => {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get(key, function (result) {
         Log.d("storage get: " + key);
@@ -23,17 +30,17 @@ const Storage = {
   /**
    * Set a item to local storage.
    *
-   * @param {string} key key of item.
+   * @param {StorageKey} key key of item.
    * @param {any} value item.
    */
-  set: (key: string, value: any): Promise<string> => {
+  set: (key: StorageKey, value: any): Promise<string> => {
     return new Promise((resolve, reject) => {
       chrome.storage.local.set({ [key]: value }, function () {
         Log.d("storage set: " + key);
         if (chrome.runtime.lastError != null) {
           reject(chrome.runtime.lastError);
         } else {
-          resolve();
+          resolve("success");
         }
       });
     });
@@ -42,16 +49,16 @@ const Storage = {
   /**
    * Remove a item in local storage.
    *
-   * @param {string} key key of item.
+   * @param {StorageKey} key key of item.
    */
-  remove: (key: string): Promise<string> => {
+  remove: (key: StorageKey): Promise<string> => {
     return new Promise((resolve, reject) => {
       chrome.storage.local.remove(key, function () {
         Log.d("storage remove: " + key);
         if (chrome.runtime.lastError != null) {
           reject(chrome.runtime.lastError);
         } else {
-          resolve();
+          resolve("success");
         }
       });
     });

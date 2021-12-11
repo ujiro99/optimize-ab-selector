@@ -9,6 +9,7 @@ module.exports = {
       __dirname,
       "src/optimizeStatusCheck.ts"
     ),
+    "dist/js/options": path.join(__dirname, "src/options/options.tsx"),
     "dist/eventPage": path.join(__dirname, "src/eventPage.ts"),
   },
   output: {
@@ -51,6 +52,7 @@ module.exports = {
         { from: "manifest.json", to: "dist/manifest.json" },
         { from: "public", to: "dist/" },
         { from: "src/popup.html", to: "dist/popup.html" },
+        { from: "src/options/options.html", to: "dist/options.html" },
       ],
     }),
   ],
