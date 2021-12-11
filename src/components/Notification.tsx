@@ -79,7 +79,11 @@ export function showNotification(
   options: NotificationProps
 ) {
   Storage.get(STORAGE_KEY.options).then((data) => {
-    if (data.show_notification) {
+    let showNotification = true
+    if (data != null && !data.show_notification) {
+      showNotification = false;
+    }
+    if (showNotification) {
       ReactDOM.render(
         <Notification
           options={options}
