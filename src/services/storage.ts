@@ -33,7 +33,7 @@ const Storage = {
         if (chrome.runtime.lastError != null) {
           reject(chrome.runtime.lastError);
         } else {
-          resolve();
+          resolve("success");
         }
       });
     });
@@ -51,7 +51,7 @@ const Storage = {
         if (chrome.runtime.lastError != null) {
           reject(chrome.runtime.lastError);
         } else {
-          resolve();
+          resolve("success");
         }
       });
     });

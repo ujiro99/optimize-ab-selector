@@ -68,17 +68,25 @@ const onMessageFuncs = {
     chrome.action.setBadgeBackgroundColor({
       color: "#555555",
     });
+    chrome.action.setIcon({
+      path: {
+        "16": "img/icon16.png",
+        "48": "img/icon48.png",
+        "128": "img/icon128.png",
+      },
+    });
 
     // save experiment to chrome storage.
     const newExperiment = param.experiment;
     Storage.get("experiments").then((experiments: Experiment[]) => {
       experiments = experiments || [];
+      const isNew = experiments.every((e) => e.testId !== newExperiment.testId);
       experiments = experiments.filter(
         (e) => e.testId !== newExperiment.testId
       );
       experiments.push(newExperiment);
       Storage.set("experiments", experiments).then(() => {
-        sendResponse(true);
+        sendResponse(isNew);
       });
     });
 

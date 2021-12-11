@@ -56,5 +56,8 @@
   },
   "msgPleasReadHelp": {
     "message": "詳細な手順はヘルプをご覧ください。"
+  },
+  "detectSucceed": {
+    "message": "テストを検出しました！"
   }
 }

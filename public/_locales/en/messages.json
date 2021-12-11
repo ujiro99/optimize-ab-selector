@@ -56,5 +56,8 @@
   },
   "msgPleasReadHelp": {
     "message": "See the help for detailed instructions."
+  },
+  "detectSucceed": {
+    "message": "Test detected!"
   }
 }
