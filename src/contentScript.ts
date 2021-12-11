@@ -6,6 +6,8 @@ import Log from "@/services/log";
 
 import { showNotification } from "@/components/Notification";
 
+const notificationElmId = "optimize-ab-selector-notification";
+
 /**
  * Parse the DOM and extract Experiment information.
  */
@@ -146,11 +148,13 @@ function tryParse() {
  * @param {string} message Message displayed above the notification.
  */
 function showParseSuccessNotify(message: string) {
-  const elmId = "optimize-ab-selector-notification";
-  const elm = document.createElement("div");
-  elm.id = elmId;
-  document.body.insertAdjacentElement("beforeend", elm);
-  showNotification(elmId, {
+  const n = document.getElementById(notificationElmId)
+  if (n == null) {
+    const elm = document.createElement("div");
+    elm.id = notificationElmId;
+    document.body.insertAdjacentElement("beforeend", elm);
+  }
+  showNotification(notificationElmId, {
     title: i18n.t("detectSucceed"),
     message: message,
   });

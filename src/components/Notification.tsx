@@ -15,22 +15,33 @@ type NotificationProps = {
   message: string;
 };
 
-function Notification(props: NotificationProps): JSX.Element {
+type _NotificationProps = {
+  title: string;
+  message: string;
+  options: Object;
+};
+
+let visible = false;
+
+function Notification(props: _NotificationProps): JSX.Element {
   const [classObj, setClassObj] = useState<Object>({
     "notification--hidden": true,
   });
 
   useEffect(() => {
     const setClass = async () => {
-      await sleep(1000);
+      await sleep(500);
       show();
       await sleep(5000);
       hide();
     };
     setClass();
-  }, []);
+  }, [props.options]);
+  // It checks for changes in props.options,
+  // because there is a case it runs multiple times on a page.
 
   async function show() {
+    visible = true;
     setClassObj({
       "notification--visible": true,
     });
@@ -39,6 +50,8 @@ function Notification(props: NotificationProps): JSX.Element {
   }
 
   async function hide() {
+    if (!visible) return;
+    visible = false;
     setClassObj({
       "notification--visible-to-hidden": true,
     });
@@ -68,7 +81,11 @@ export function showNotification(
   Storage.get(STORAGE_KEY.options).then((data) => {
     if (data.show_notification) {
       ReactDOM.render(
-        <Notification title={options.title} message={options.message} />,
+        <Notification
+          options={options}
+          title={options.title}
+          message={options.message}
+        />,
         document.getElementById(elementId)
       );
     }
