@@ -1,4 +1,3 @@
-import React from "react";
 import "@/scss/help.scss";
 
 import * as i18n from "@/services/i18n";

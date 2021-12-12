@@ -124,18 +124,15 @@ function parse(): Experiment {
 function tryParse() {
   const navLink = document.querySelector("#suite-top-nav .md-nav-bar a");
   if (navLink != null) {
-    if (navLink.className.match(/md-active/) != null) {
-      // The DOM is updated asynchronously.
-      // Monitor the loading dialog, and parse after the DOM is updated.
-      const dialog = document.getElementsByClassName("opt-busy-dialog")[0];
-      if (dialog != null) {
-        Log.d("start dialog observer.");
-        isFound = false;
-        dialogObserver.observe(dialog, {
-          attributes: true,
-          attributeFilter: ["class"],
-        });
-      }
+    // The DOM is updated asynchronously.
+    // Monitor the loading dialog, and parse after the DOM is updated.
+    const dialog = document.getElementsByClassName("opt-busy-dialog")[0];
+    if (dialog != null) {
+      Log.d("start dialog observer.");
+      dialogObserver.observe(dialog, {
+        attributes: true,
+        attributeFilter: ["class"],
+      });
     }
   } else {
     Log.d("nav-bar not found");
@@ -143,19 +140,34 @@ function tryParse() {
 }
 
 /**
+ * Types of notifications.
+ */
+const NOTIFICATION_TYPE = {
+  DETECT_RUNNING: "DETECT_RUNNING",
+  DETECT_ENDED: "DETECT_ENDED",
+} as const;
+type NotificationType =
+  typeof NOTIFICATION_TYPE[keyof typeof NOTIFICATION_TYPE];
+
+const NOTIFICATION_TITLE = {
+  [NOTIFICATION_TYPE.DETECT_RUNNING]: i18n.t("detectSucceed"),
+  [NOTIFICATION_TYPE.DETECT_ENDED]: i18n.t("detectEnded"),
+};
+
+/**
  * Show a notification on the page.
  *
  * @param {string} message Message displayed above the notification.
  */
-function showParseSuccessNotify(message: string) {
-  const n = document.getElementById(notificationElmId)
+function showNotify(type: NotificationType, message: string) {
+  const n = document.getElementById(notificationElmId);
   if (n == null) {
     const elm = document.createElement("div");
     elm.id = notificationElmId;
     document.body.insertAdjacentElement("beforeend", elm);
   }
   showNotification(notificationElmId, {
-    title: i18n.t("detectSucceed"),
+    title: NOTIFICATION_TITLE[type],
     message: message,
   });
 }
@@ -170,24 +182,40 @@ function isHidden(el: Node) {
   return style.display === "none";
 }
 
-let isFound = false;
 const dialogObserver = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
-    if (isHidden(mutation.target) && !isFound) {
+    if (isHidden(mutation.target)) {
       // When the loading dialog disappears, start parsing.
       const experiment = parse();
       if (experiment != null) {
-        chrome.runtime.sendMessage({
-          command: "addExperiment",
-          parameter: {
-            experiment: experiment,
+        chrome.runtime.sendMessage(
+          {
+            command: "addExperiment",
+            parameter: {
+              experiment: experiment,
+            },
           },
-        }, (res) => {
-          // if detect a new experiment, show a notification.
-          if (res) showParseSuccessNotify(experiment.name);
-        });
-        isFound = true;
-        dialogObserver.disconnect();
+          (changed) => {
+            if (!changed) {
+              // No change detected.
+              return;
+            }
+            switch (experiment.status) {
+              case EXPERIMENT_STATUS.Running:
+                // if detect a new experiment, show a notification.
+                showNotify(NOTIFICATION_TYPE.DETECT_RUNNING, experiment.name);
+                break;
+              case EXPERIMENT_STATUS.Ended:
+              case EXPERIMENT_STATUS.Archived:
+                // if detect a ended experiment, show a notification.
+                showNotify(NOTIFICATION_TYPE.DETECT_ENDED, experiment.name);
+                break;
+              default:
+                Log.d("experiment added");
+                break;
+            }
+          }
+        );
       }
     }
   });

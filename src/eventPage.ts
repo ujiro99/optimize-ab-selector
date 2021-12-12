@@ -80,13 +80,17 @@ const onMessageFuncs = {
     const newExperiment = param.experiment;
     Storage.get(STORAGE_KEY.experiments).then((experiments: Experiment[]) => {
       experiments = experiments || [];
-      const isNew = experiments.every((e) => e.testId !== newExperiment.testId);
-      experiments = experiments.filter(
-        (e) => e.testId !== newExperiment.testId
-      );
+      const old = experiments.find((e) => e.testId === newExperiment.testId);
+      const isNew = old == null;
+      if (!isNew) {
+        experiments = experiments.filter(
+          (e) => e.testId !== newExperiment.testId
+        );
+      }
       experiments.push(newExperiment);
       Storage.set(STORAGE_KEY.experiments, experiments).then(() => {
-        sendResponse(isNew);
+        const changed = isNew || newExperiment.status !== old.status
+        sendResponse(changed);
       });
     });
 

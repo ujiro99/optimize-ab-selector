@@ -60,6 +60,9 @@
   "detectSucceed": {
     "message": "テストを検出しました！"
   },
+  "detectEnded": {
+    "message": "テストの終了を検出しました"
+  },
   "optionEnableNotification":  {
     "message": "テスト検出時に通知を表示する"
   }

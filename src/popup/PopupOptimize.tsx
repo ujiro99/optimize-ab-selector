@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Experiment, ExperimentPattern } from "@/@types/googleOptimize.d";
 import { EXPERIMENT_STATUS, EXPERIMENT_TYPE } from "@/utils/constants";
 
@@ -90,8 +90,8 @@ export default function PopupOptimize(props: any) {
   function clearStorage() {
     if (window.confirm(i18n.t("labelClear"))) {
       Storage.remove(STORAGE_KEY.experiments).then(() => {
-          Log.d("clearStorage finished");
-          window.close();
+        Log.d("clearStorage finished");
+        window.close();
       });
     }
   }
