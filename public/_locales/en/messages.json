@@ -60,6 +60,9 @@
   "detectSucceed": {
     "message": "Test detected!"
   },
+  "detectEnded": {
+    "message": "Detected the end of a test."
+  },
   "optionEnableNotification":  {
     "message": "Display a notification when an Experiment is detected."
   }
