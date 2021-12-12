@@ -89,8 +89,8 @@ const onMessageFuncs = {
       }
       experiments.push(newExperiment);
       Storage.set(STORAGE_KEY.experiments, experiments).then(() => {
-        const statusChanged = newExperiment.status !== old.status
-        sendResponse(isNew || statusChanged);
+        const changed = isNew || newExperiment.status !== old.status
+        sendResponse(changed);
       });
     });
 
