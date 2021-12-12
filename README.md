@@ -1,4 +1,4 @@
-<img src="docs/assets/tile-small.png" alt="extension logo" width="400">
+<img src="public/img/store/small-promo-tile.png" alt="extension logo" width="400">
 
 # optimize-ab-selector
 This is a chrome extension, allows you to select variants of A/B testing by the Google Optimize.
