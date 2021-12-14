@@ -48,7 +48,7 @@ export function ExperimentPatterns(props: ExperimentPatternProps) {
       );
     });
     return <ul className="sections">{sectionInners.map((s) => s)}</ul>;
-  } else {
+  } else if (type === EXPERIMENT_TYPE.AB) {
     return (
       <ol className="patterns">
         {patterns.map((p) => (
@@ -56,6 +56,10 @@ export function ExperimentPatterns(props: ExperimentPatternProps) {
         ))}
       </ol>
     );
+  } else if (type === EXPERIMENT_TYPE.PERSONALIZATION) {
+    return <div className="test-type">{i18n.t("typePersonalization")}</div>;
+  } else {
+    return <div></div>
   }
 }
 

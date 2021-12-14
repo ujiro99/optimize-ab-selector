@@ -16,7 +16,8 @@ export const EXPERIMENT_STATUS = {
 export const EXPERIMENT_TYPE = {
   AB: "AB",
   MVT: "MVT",
-};
+  PERSONALIZATION: "PERSONALIZATION",
+} as const;
 
 /**
  * Extension icon status.

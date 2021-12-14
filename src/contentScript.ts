@@ -55,28 +55,31 @@ function parse(): Experiment {
   experiment.type = EXPERIMENT_TYPE.AB;
 
   // patterns - MVT
-  if (patterns.length === 0) {
+  const mvtSections = document.querySelectorAll("opt-mvt-section");
+  if (mvtSections.length > 0) {
     experiment.type = EXPERIMENT_TYPE.MVT;
+  }
+  mvtSections.forEach((mvt) => {
+    const sectionNameElm = mvt.querySelector(".opt-section-name");
+    const sectionName = sectionNameElm.innerHTML.trim();
+    Log.d("section name: " + sectionName);
 
-    // parse sections
-    const mvtSections = document.querySelectorAll("opt-mvt-section");
-    mvtSections.forEach((mvt) => {
-      const sectionNameElm = mvt.querySelector(".opt-section-name");
-      const sectionName = sectionNameElm.innerHTML.trim();
-      Log.d("section name: " + sectionName);
-
-      // parse patterns
-      const mvtPatternElms = mvt.querySelectorAll(".opt-mvt-variation-name");
-      mvtPatternElms.forEach((p, index) => {
-        patterns.push({
-          testId: experiment.testId,
-          sectionName: sectionName,
-          name: p.innerHTML.trim(),
-          number: index,
-        });
-        Log.d("pattern name: " + p.innerHTML.trim());
+    // parse patterns
+    const mvtPatternElms = mvt.querySelectorAll(".opt-mvt-variation-name");
+    mvtPatternElms.forEach((p, index) => {
+      patterns.push({
+        testId: experiment.testId,
+        sectionName: sectionName,
+        name: p.innerHTML.trim(),
+        number: index,
       });
+      Log.d("pattern name: " + p.innerHTML.trim());
     });
+  });
+
+  if (patterns.length === 0) {
+    // if patterns not found, this is customize.
+    experiment.type = EXPERIMENT_TYPE.PERSONALIZATION;
   }
 
   // targetUrl

@@ -1,4 +1,4 @@
-import { ExperimentInCookie } from "@/@types/googleOptimize.d";
+import { ExperimentInCookie, ExperimentType } from "@/@types/googleOptimize.d";
 import { EXPERIMENT_TYPE, ExperimentExpireDefault } from "@/utils/constants";
 import Log from "@/services/log";
 import Cookie from "@/services/cookie";
@@ -111,7 +111,7 @@ function parseGaexp(value: string): ExperimentInCookie[] {
   value = value.slice(value.indexOf(prefix) + prefix.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
-    let experimentType = EXPERIMENT_TYPE.AB;
+    let experimentType: ExperimentType = EXPERIMENT_TYPE.AB;
     if (es[2].indexOf("-") > 0) {
       experimentType = EXPERIMENT_TYPE.MVT;
     }

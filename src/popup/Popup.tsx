@@ -36,6 +36,8 @@ function ExperimentPatterns(props: ExperimentPatternProps) {
     return ExperimentPatternsAB(props);
   } else if (type === EXPERIMENT_TYPE.MVT) {
     return ExperimentPatternsMVT(props);
+  } else if (type === EXPERIMENT_TYPE.PERSONALIZATION) {
+    return <div className="test-type">{i18n.t("typePersonalization")}</div>;
   } else {
     Log.w("ExperimentType not defined: ", props);
     return <div></div>;

@@ -271,6 +271,14 @@ body {
   }
 }
 
+.test-type {
+  border-radius: 8px;
+  padding: 6px 8px;
+  background-color: #f8f9fa;
+  color: rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
 .debug-popup-data {
   font-size: 1px;
   height: 1px;

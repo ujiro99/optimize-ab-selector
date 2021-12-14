@@ -18,6 +18,9 @@
   "labelClear": {
     "message": "Are you sure you want to clear all saved Experiences?"
   },
+  "typePersonalization": {
+    "message": "Personalization"
+  },
   "helpTitle": {
     "message": "Usage"
   },
