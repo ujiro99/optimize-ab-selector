@@ -18,6 +18,9 @@
   "labelClear": {
     "message": "保存した全てのテストを消去します。よろしいですか？"
   },
+  "typePersonalization": {
+    "message": "カスタマイズ"
+  },
   "helpTitle": {
     "message": "使い方"
   },
