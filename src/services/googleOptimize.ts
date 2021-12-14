@@ -7,7 +7,8 @@ import Cookie from "@/services/cookie";
 const GO_COOKIE_KEY = "_gaexp";
 
 /** Prefix value added to the Google Optimize cookie value */
-const GO_PREFIX = "GAX1.3.";
+const GO_PREFIX_12 = "GAX1.2.";
+const GO_PREFIX_13 = "GAX1.3.";
 
 /**
  * Returns Lists of experiment founds in Cookie.
@@ -73,10 +74,11 @@ export async function switchPatterns(
   });
 
   // Generate new cookie value.
+  const prefix = parsePrefix(value)
   let generated = experiments
     .map((exp) => `${exp.testId}.${exp.expire}.${exp.pattern}`)
     .join("!");
-  generated = GO_PREFIX + generated;
+  generated = prefix + generated;
 
   Log.d(`set Cookie: ${generated}`);
   return Cookie.set({
@@ -88,6 +90,14 @@ export async function switchPatterns(
 }
 
 /**
+ * Parse a prefix of _gaexp on cookie.
+ */
+function parsePrefix(value: string): string {
+  const m = value.match(new RegExp(`${GO_PREFIX_12}|${GO_PREFIX_13}`))
+  return m[0]
+}
+
+/**
  * Parse a value of _gaexp on cookie.
  */
 function parseGaexp(value: string): ExperimentInCookie[] {
@@ -95,8 +105,10 @@ function parseGaexp(value: string): ExperimentInCookie[] {
   // value example:
   //  - GAX1.3.-f48SgmLRl2mLm7ERqfkUg.19059.1
   //  - GAX1.3.-f48SgmLRl2mLm7ERqfkUg.19059.1!FEJwvaarSEWFcD8-VljYcA.19059.1
+  //  - GAX1.2.6VCqQqb7TgaiXm97jv8fWg.19062.1!k8OcJx9eT-m4yZBVMSB0bg.19063.1
   //
-  value = value.slice(value.indexOf(GO_PREFIX) + GO_PREFIX.length);
+  const prefix = parsePrefix(value)
+  value = value.slice(value.indexOf(prefix) + prefix.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
     let experimentType = EXPERIMENT_TYPE.AB;
