@@ -12,9 +12,14 @@ import { equalsOptimizeUrl } from "@/services/googleOptimize";
 import Log from "@/services/log";
 import * as i18n from "@/services/i18n";
 
+import { useGaEvent, useGaView } from "@/hooks/useAnalytics";
+
 import "@/popup/Popup.scss";
 
 export default function PopupOther(props: any) {
+  useGaView("PopupOther");
+  const sendEvent = useGaEvent()
+
   const url = props.url;
   const savedExperiments: Experiment[] = props.saved || [];
   const experienceEmpty = savedExperiments.length === 0;
@@ -37,6 +42,7 @@ export default function PopupOther(props: any) {
 
   function toggleHelp() {
     setHelpVisible(!helpVisible);
+    if (!helpVisible) sendEvent({ category: "click", action: "showHelp"})
   }
 
   // Show popup window.

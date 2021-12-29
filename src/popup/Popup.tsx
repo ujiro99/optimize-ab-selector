@@ -25,6 +25,8 @@ import Tabs from "@/services/tabs";
 import Log from "@/services/log";
 import * as i18n from "@/services/i18n";
 
+import { useGaEvent, useGaView } from "@/hooks/useAnalytics";
+
 const NameSeparator = "$$";
 
 /**
@@ -214,6 +216,9 @@ const reducerFunc = (state: StateType, action: any) => {
 };
 
 export default function Popup(props: any) {
+  useGaView("Popup")
+  const sendEvent = useGaEvent()
+
   const url = props.url;
   const tabId = props.tabId;
   const experimentInCookie: ExperimentInCookie[] = props.current || [];
@@ -264,6 +269,10 @@ export default function Popup(props: any) {
    * Request update a pattern.
    */
   function requestUpdate() {
+    if (state.changedValues.length === 0) {
+      return
+    }
+
     let parsed = new URL(url);
 
     const params: EventPage.switchPatternsParam = {
@@ -282,10 +291,12 @@ export default function Popup(props: any) {
         window.close();
       }
     );
+    sendEvent({ category: "click", action: "apply"})
   }
 
   function toggleHelp() {
     setHelpVisible(!helpVisible);
+    if (!helpVisible) sendEvent({ category: "click", action: "showHelp"})
   }
 
   function changePattern(
