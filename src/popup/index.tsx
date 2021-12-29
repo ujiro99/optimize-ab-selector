@@ -8,12 +8,16 @@ import "@/utils/workaround";
 import { Experiment, ExperimentInCookie } from "@/@types/googleOptimize.d";
 
 import Tabs from "@/services/tabs";
+import Storage, { STORAGE_KEY } from "@/services/storage";
 import { Analytics } from "@/services/analytics";
 
 import { AppName, TrackingId } from "@/utils/constants";
-Analytics.init(AppName, TrackingId)
 
 async function initPopup() {
+  // initialize google analytics
+  const options = await Storage.get(STORAGE_KEY.options);
+  Analytics.init(AppName, TrackingId, options.tracking_permitted);
+
   const tab = await Tabs.getCurrentTab();
 
   const inOptimize = tab.url.match(/optimize.google.com/) != null;

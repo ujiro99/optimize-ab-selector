@@ -269,6 +269,10 @@ export default function Popup(props: any) {
    * Request update a pattern.
    */
   function requestUpdate() {
+    if (state.changedValues.length === 0) {
+      return
+    }
+
     let parsed = new URL(url);
 
     const params: EventPage.switchPatternsParam = {

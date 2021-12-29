@@ -17,6 +17,7 @@ function init() {
  */
 const DEFAULTS = {
   show_notification: true,
+  tracking_permitted: true
 };
 
 function Options(): JSX.Element {
@@ -52,6 +53,16 @@ function Options(): JSX.Element {
           <ToggleSwitch
             name="show_notification"
             default={options.show_notification}
+            onChange={onChange}
+          />
+        </div>
+      </div>
+      <div className="option-item">
+        <p className="option-item__name">{i18n.t("optionEnableTracking")}</p>
+        <div className="option-item__input">
+          <ToggleSwitch
+            name="tracking_permitted"
+            default={options.tracking_permitted}
             onChange={onChange}
           />
         </div>

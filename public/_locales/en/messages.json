@@ -68,5 +68,8 @@
   },
   "optionEnableNotification":  {
     "message": "Display a notification when an Experiment is detected."
+  },
+  "optionEnableTracking":  {
+    "message": "Allow anonymous usage tracking?"
   }
 }

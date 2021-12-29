@@ -68,5 +68,8 @@
   },
   "optionEnableNotification":  {
     "message": "テスト検出時に通知を表示する"
+  },
+  "optionEnableTracking":  {
+    "message": "匿名の使用状況の收集を許可しますか?"
   }
 }

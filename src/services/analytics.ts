@@ -8,7 +8,10 @@ type GaEvent = {
 };
 
 export const Analytics = {
-  init(appName: string, trackingId: string) {
+  init(appName: string, trackingId: string, permitted = true) {
+    if (!permitted) {
+      return;
+    }
     const service = analytics.getService(appName);
     window.tracker = service.getTracker(trackingId);
   },
@@ -22,13 +25,15 @@ export const Analytics = {
       params.label,
       params.value
     );
-    Log.d(`GA: sendEvent ${params.category} ${params.action} ${params.label} ${params.value}`)
+    Log.d(
+      `GA: sendEvent ${params.category} ${params.action} ${params.label} ${params.value}`
+    );
   },
 
   sendScreenView(description: string) {
     if (!window.tracker) return;
     if (description == null) return;
     window.tracker.sendAppView(description);
-    Log.d(`GA: sendScreenView ${description}`)
+    Log.d(`GA: sendScreenView ${description}`);
   },
 };
