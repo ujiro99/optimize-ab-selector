@@ -16,6 +16,8 @@ import * as i18n from "@/services/i18n";
 
 import "@/popup/Popup.scss";
 
+import { useGaEvent, useGaView } from "@/hooks/useAnalytics";
+
 /**
  * ExperimentPatterns component
  */
@@ -59,11 +61,14 @@ export function ExperimentPatterns(props: ExperimentPatternProps) {
   } else if (type === EXPERIMENT_TYPE.PERSONALIZATION) {
     return <div className="test-type">{i18n.t("typePersonalization")}</div>;
   } else {
-    return <div></div>
+    return <div></div>;
   }
 }
 
 export default function PopupOptimize(props: any) {
+  useGaView("PopupOptimize");
+  const sendEvent = useGaEvent()
+
   const url = props.url;
 
   const savedExperiments: Experiment[] = props.saved || [];
@@ -86,6 +91,7 @@ export default function PopupOptimize(props: any) {
 
   function toggleHelp() {
     setHelpVisible(!helpVisible);
+    if (!helpVisible) sendEvent({ category: "click", action: "showHelp"})
   }
 
   /**

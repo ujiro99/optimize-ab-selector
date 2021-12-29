@@ -31,3 +31,9 @@ export const IconStatus = {
  * Default expire time.
  */
 export const ExperimentExpireDefault = 18926;
+
+/** Google Analytics Tracking Id */
+export const TrackingId = "UA-32234486-9"
+
+/** App name */
+export const AppName = "optimize-ab-selector"

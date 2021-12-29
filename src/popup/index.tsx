@@ -8,6 +8,10 @@ import "@/utils/workaround";
 import { Experiment, ExperimentInCookie } from "@/@types/googleOptimize.d";
 
 import Tabs from "@/services/tabs";
+import { Analytics } from "@/services/analytics";
+
+import { AppName, TrackingId } from "@/utils/constants";
+Analytics.init(AppName, TrackingId)
 
 async function initPopup() {
   const tab = await Tabs.getCurrentTab();
