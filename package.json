@@ -21,7 +21,7 @@
     "@types/react-dom": "^16.9.14",
     "css-loader": "^3.6.0",
     "mversion": "^2.0.1",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^6.0.7",
     "set-value": ">=4.0.1",
     "style-loader": "^0.20.3",
