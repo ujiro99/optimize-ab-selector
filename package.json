@@ -27,7 +27,7 @@
     "css-loader": "^3.6.0",
     "jest": "^27.5.1",
     "mversion": "^2.0.1",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^6.0.7",
     "set-value": ">=4.0.1",
     "style-loader": "^0.20.3",
