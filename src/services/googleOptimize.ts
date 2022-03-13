@@ -32,10 +32,6 @@ export async function list(url: string): Promise<ExperimentInCookie[]> {
     Log.d(`id: ${expe.testId}, pattern: ${expe.pattern}`);
   }
 
-  // if (typeof dataLayer !== "undefined") {
-  //   initializeOtimizeCallback();
-  // }
-
   return experiments;
 }
 
@@ -136,40 +132,4 @@ export function equalsOptimizeUrl(a: string, b: string) {
   const hashA = new URL(a).hash.replace("/report", "");
   const hashB = new URL(b).hash.replace("/report", "");
   return hashA === hashB;
-}
-
-function initializeOtimizeCallback() {
-  Log.d("start initializeOtimizeCallback.");
-
-  function implementManyExperiments(value: string, name: string) {
-    Log.d("value: " + value + " name: " + name);
-  }
-  function gtag(_: string, __: string, ___: object) {
-    dataLayer.push(arguments);
-  }
-  gtag("event", "optimize.callback", {
-    callback: implementManyExperiments,
-  });
-
-  if (typeof google_optimize !== "undefined") {
-    initializeGoogleOptimize();
-  }
-}
-
-function initializeGoogleOptimize() {
-  Log.d("start initializeGoogleOptimize.");
-
-  function delayedInitialization() {
-    var value = google_optimize && google_optimize.get("<experiment_id_A>");
-  }
-
-  var hideEnd = dataLayer.hide.end;
-  if (hideEnd) {
-    dataLayer.hide.end = function () {
-      delayedInitialization();
-      hideEnd();
-    };
-  } else {
-    delayedInitialization();
-  }
 }
