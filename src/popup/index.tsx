@@ -64,6 +64,7 @@ async function initPopup() {
             command: "currentExperiments",
             parameter: {
               url: tab.url,
+              tabId: tab.id
             },
           },
           function (currentExperiments) {

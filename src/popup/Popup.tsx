@@ -277,6 +277,7 @@ export default function Popup(props: any) {
 
     const params: EventPage.switchPatternsParam = {
       url: parsed.origin,
+      tabId: tabId,
       patterns: state.selectedPatterns,
     };
 

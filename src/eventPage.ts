@@ -33,7 +33,7 @@ const onMessageFuncs = {
    */
   currentExperiments(param: any, sendResponse: Function) {
     // find experiments in Cookie.
-    Optimize.list(param.url).then((experiments) => {
+    Optimize.list(param.url, param.tabId).then((experiments) => {
       sendResponse(experiments);
     });
     return true;
@@ -44,9 +44,10 @@ const onMessageFuncs = {
    */
   switchPatterns(param: EventPage.switchPatternsParam, sendResponse: Function) {
     const url = param.url;
+    const tabId = param.tabId;
     const switchPatterns: ExperimentInCookie[] = param.patterns;
 
-    Optimize.switchPatterns(url, switchPatterns).then(() => {
+    Optimize.switchPatterns(url, tabId, switchPatterns).then(() => {
       sendResponse(true);
     });
 
