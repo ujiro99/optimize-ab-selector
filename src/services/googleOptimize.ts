@@ -4,7 +4,7 @@ import Log from "@/services/log";
 import Cookie from "@/services/cookie";
 
 /** Key name of Google Optimize cookie */
-const GO_COOKIE_KEY = "_gaexp";
+export const GO_COOKIE_KEY = "_gaexp";
 
 /** Prefix value added to the Google Optimize cookie value */
 const GO_PREFIX_12 = "GAX1.2.";
@@ -16,11 +16,11 @@ const GO_PREFIX_13 = "GAX1.3.";
  * @param {string} url Target page url.
  * @returns {Promise<Experiment[]>}
  */
-export async function list(url: string): Promise<ExperimentInCookie[]> {
+export async function list(url: string, tabId: number): Promise<ExperimentInCookie[]> {
   const cookie = await Cookie.get({
     url: url,
     name: GO_COOKIE_KEY,
-  });
+  }, tabId);
 
   if (cookie == null) {
     // Google optimize experiments doesn't exist on this page.
@@ -43,15 +43,16 @@ export async function list(url: string): Promise<ExperimentInCookie[]> {
  */
 export async function switchPatterns(
   url: string,
+  tabId: number,
   switchPatterns: ExperimentInCookie[]
 ) {
   // Log.d(`set Pattern: ${url} ${testId} ${patternNumber}`);
 
   // Get pattern number.
-  const { value, domain } = await Cookie.get({
+  const { value, domain, storeId } = await Cookie.get({
     url: url,
     name: GO_COOKIE_KEY,
-  });
+  }, tabId);
   const experiments = parseGaexp(value);
 
   // update experiments to new patterns.
@@ -82,6 +83,7 @@ export async function switchPatterns(
     domain: domain,
     value: generated,
     url: url,
+    storeId: storeId
   });
 }
 
@@ -96,7 +98,7 @@ function parsePrefix(value: string): string {
 /**
  * Parse a value of _gaexp on cookie.
  */
-function parseGaexp(value: string): ExperimentInCookie[] {
+export function parseGaexp(value: string): ExperimentInCookie[] {
   //
   // value example:
   //  - GAX1.3.-f48SgmLRl2mLm7ERqfkUg.19059.1
