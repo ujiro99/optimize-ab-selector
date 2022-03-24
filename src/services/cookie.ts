@@ -7,7 +7,7 @@ const Cookie = {
     return new Promise((resolve) => {
       chrome.cookies.getAllCookieStores((stores) => {
         const store = stores.find((s) => s.tabIds.some((t) => t === tabId));
-        if (store) {
+        if (store && details.url) {
           details.storeId = store.id;
           chrome.cookies.get(details, (cookie: chrome.cookies.Cookie) => {
             resolve(cookie);

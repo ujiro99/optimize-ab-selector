@@ -16,11 +16,17 @@ const GO_PREFIX_13 = "GAX1.3.";
  * @param {string} url Target page url.
  * @returns {Promise<Experiment[]>}
  */
-export async function list(url: string, tabId: number): Promise<ExperimentInCookie[]> {
-  const cookie = await Cookie.get({
-    url: url,
-    name: GO_COOKIE_KEY,
-  }, tabId);
+export async function list(
+  url: string,
+  tabId: number
+): Promise<ExperimentInCookie[]> {
+  const cookie = await Cookie.get(
+    {
+      url: url,
+      name: GO_COOKIE_KEY,
+    },
+    tabId
+  );
 
   if (cookie == null) {
     // Google optimize experiments doesn't exist on this page.
@@ -49,10 +55,13 @@ export async function switchPatterns(
   // Log.d(`set Pattern: ${url} ${testId} ${patternNumber}`);
 
   // Get pattern number.
-  const { value, domain, storeId } = await Cookie.get({
-    url: url,
-    name: GO_COOKIE_KEY,
-  }, tabId);
+  const { value, domain, storeId } = await Cookie.get(
+    {
+      url: url,
+      name: GO_COOKIE_KEY,
+    },
+    tabId
+  );
   const experiments = parseGaexp(value);
 
   // update experiments to new patterns.
@@ -71,7 +80,7 @@ export async function switchPatterns(
   });
 
   // Generate new cookie value.
-  const prefix = parsePrefix(value)
+  const prefix = parsePrefix(value);
   let generated = experiments
     .map((exp) => `${exp.testId}.${exp.expire}.${exp.pattern}`)
     .join("!");
@@ -83,7 +92,7 @@ export async function switchPatterns(
     domain: domain,
     value: generated,
     url: url,
-    storeId: storeId
+    storeId: storeId,
   });
 }
 
@@ -91,8 +100,8 @@ export async function switchPatterns(
  * Parse a prefix of _gaexp on cookie.
  */
 function parsePrefix(value: string): string {
-  const m = value.match(new RegExp(`${GO_PREFIX_12}|${GO_PREFIX_13}`))
-  return m[0]
+  const m = value.match(new RegExp(`${GO_PREFIX_12}|${GO_PREFIX_13}`));
+  return m[0];
 }
 
 /**
@@ -105,7 +114,7 @@ export function parseGaexp(value: string): ExperimentInCookie[] {
   //  - GAX1.3.-f48SgmLRl2mLm7ERqfkUg.19059.1!FEJwvaarSEWFcD8-VljYcA.19059.1
   //  - GAX1.2.6VCqQqb7TgaiXm97jv8fWg.19062.1!k8OcJx9eT-m4yZBVMSB0bg.19063.1
   //
-  const prefix = parsePrefix(value)
+  const prefix = parsePrefix(value);
   value = value.slice(value.indexOf(prefix) + prefix.length);
   return value.split("!").map((e) => {
     const es = e.split(".");
