@@ -41,7 +41,6 @@
   },
   "permissions": [
     "cookies",
-    "tabs",
     "storage"
   ],
   "host_permissions": [
