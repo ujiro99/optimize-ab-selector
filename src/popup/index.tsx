@@ -12,6 +12,7 @@ import Storage, { STORAGE_KEY } from "@/services/storage";
 import { Analytics } from "@/services/analytics";
 
 import { AppName, TrackingId } from "@/utils/constants";
+import { checkOptimizeOpen } from "@/utils/utility";
 
 async function initPopup() {
   // initialize google analytics
@@ -20,7 +21,7 @@ async function initPopup() {
 
   const tab = await Tabs.getCurrentTab();
 
-  const inOptimize = tab.url.match(/optimize.google.com/) != null;
+  const inOptimize = checkOptimizeOpen(tab.url);
 
   const renderOptimize = (savedExperiments: Experiment[]) => {
     ReactDOM.render(

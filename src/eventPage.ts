@@ -141,6 +141,13 @@ const onMessageFuncs = {
         }
       );
     }
+
+    const text: string = param.text;
+    if (text) {
+      chrome.action.setBadgeText({
+        text: text,
+      });
+    }
     return true;
   },
 

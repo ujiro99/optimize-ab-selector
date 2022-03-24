@@ -10,8 +10,10 @@ const Cookie = {
         if (store) {
           details.storeId = store.id;
           chrome.cookies.get(details, (cookie: chrome.cookies.Cookie) => {
-            if (cookie) resolve(cookie);
+            resolve(cookie);
           });
+        } else {
+          resolve(null);
         }
       });
     });

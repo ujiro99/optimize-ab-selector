@@ -2,11 +2,22 @@ import { ExperimentInCookie } from "@/@types/googleOptimize.d";
 import { IconStatus } from "@/utils/constants";
 import * as Optimize from "@/services/googleOptimize";
 import Log from "@/services/log";
+import { checkOptimizeOpen } from "@/utils/utility";
 
 /**
  * Check if the experiments exists, and update the extension icon.
  */
 function checkBadge() {
+  if(checkOptimizeOpen(location.href)) {
+    chrome.runtime.sendMessage({
+      command: "setIconStatus",
+      parameter: {
+        status: IconStatus.Active,
+      },
+    });
+    return;
+  }
+
   const currentExperiments = getCurrentExperiment();
   if (currentExperiments.length === 0) {
     Log.d("experiments not found");
@@ -22,6 +33,7 @@ function checkBadge() {
       command: "setIconStatus",
       parameter: {
         status: IconStatus.Active,
+        text: `${currentExperiments.length}`
       },
     });
   }
