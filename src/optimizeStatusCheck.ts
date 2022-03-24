@@ -33,6 +33,7 @@ function checkBadge() {
       command: "setIconStatus",
       parameter: {
         status: IconStatus.Active,
+        text: `${currentExperiments.length}`
       },
     });
   }
