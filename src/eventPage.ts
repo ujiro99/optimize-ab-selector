@@ -147,6 +147,9 @@ const onMessageFuncs = {
       chrome.action.setBadgeText({
         text: text,
       });
+      chrome.action.setBadgeBackgroundColor({
+        color: "#555555",
+      });
     }
     return true;
   },
